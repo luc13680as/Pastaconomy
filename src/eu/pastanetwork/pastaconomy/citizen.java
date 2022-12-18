@@ -20,22 +20,28 @@ public class citizen {
         return;
     }
 
-    public boolean searchWork(ArrayList<company> companyList){
-        for(int i = 0; i < companyList.size(); i++){
+    public boolean checkHasJob(){
+        return this.hasJob;
+    }
 
+    private void setHasJob(boolean statusJob){
+        this.hasJob = statusJob;
+    }
+
+    public boolean searchWork(ArrayList<company> companyList){
+        if (this.hasJob == true){
+            return true;
+        }
+        for(int i = 0; i < companyList.size(); i++){
             boolean companyResponse = companyList.get(i).isRecruiting();
             if (companyResponse){
-
                 boolean companyStatus = companyList.get(i).recruitEmployees(this);
                 if (companyStatus){
-
                     System.out.println("The citizen has been recruited inside an company");
+                    hasJob = true;
                     return true;
                 }
-                else {
-
-                    System.out.println("The citizen has been refused inside an company");
-                }
+                System.out.println("The citizen has been refused inside an company");
             }
         }
         return false;
@@ -45,5 +51,18 @@ public class citizen {
         companyList.add(new woodCompany(this));
         System.out.println("The citizen created a company");
         return;
+    }
+
+    public void removeEmployeeFromCompany(company Company, citizen target){
+        try {
+            Company.DismissEmployee(target);
+        }
+        catch (IllegalArgumentException exception) {
+            System.out.println("Error: " + exception.getMessage());
+        }
+    }
+
+    public void LeaveCompany(){
+        hasJob = false;
     }
 }

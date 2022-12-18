@@ -20,13 +20,16 @@ public class Main {
             boolean state = population.get(i).searchWork(companyRegistry);
             if (state == false){
                 population.get(i).createCompany(companyRegistry);
-
             }
         }
 
         for (int i = 0; i < companyRegistry.size(); i++){
             companyRegistry.get(i).report();
-            companyRegistry.get(i).Produce();
         }
+
+        System.out.println("== Test part ==");
+
+        City mycity = new City("Pasta-City",20000);
+        System.out.println("City: " + mycity.GetCityName() + " Population: " + mycity.GetNumberPopulation() + " Compagnies: " + mycity.GetNumberCompanies());
     }
 }

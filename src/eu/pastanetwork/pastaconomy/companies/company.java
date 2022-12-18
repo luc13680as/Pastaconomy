@@ -11,7 +11,7 @@ public abstract class company {
     private citizen boss;
     private ArrayList<citizen> employees = new ArrayList<citizen>();
     private int numberEmployees = 0;
-    private int maxEmployees = 5;
+    private int maxEmployees = 15;
     private int money = 0;
 
     public company(citizen creator){
@@ -51,6 +51,16 @@ public abstract class company {
             employees.add(recruit);
             numberEmployees++;
             return true;
+        }
+    }
+
+    public void DismissEmployee(citizen target){
+        if (target instanceof citizen && ((citizen)target).equals(boss)){
+            employees.remove(target);
+            target.LeaveCompany();
+        }
+        else {
+            throw new IllegalArgumentException("Only the owner of the company can remove an employee from a company");
         }
     }
 
