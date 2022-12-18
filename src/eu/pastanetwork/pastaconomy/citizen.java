@@ -49,20 +49,21 @@ public class citizen {
 
     public void createCompany(ArrayList<company> companyList){
         companyList.add(new woodCompany(this));
+        this.hasJob = true;
         System.out.println("The citizen created a company");
         return;
     }
 
-    public void removeEmployeeFromCompany(company Company, citizen target){
+    /*public void removeEmployeeFromCompany(company Company, citizen target){
         try {
             Company.DismissEmployee(target);
         }
         catch (IllegalArgumentException exception) {
             System.out.println("Error: " + exception.getMessage());
         }
-    }
+    }*/
 
-    public void LeaveCompany(){
+    /*public void LeaveCompany(){
         hasJob = false;
-    }
+    }*/
 }
