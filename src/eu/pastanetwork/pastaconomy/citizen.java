@@ -1,6 +1,7 @@
 package eu.pastanetwork.pastaconomy;
 
 import eu.pastanetwork.pastaconomy.companies.company;
+import eu.pastanetwork.pastaconomy.companies.woodCompany;
 
 import java.util.ArrayList;
 
@@ -41,7 +42,7 @@ public class citizen {
     }
 
     public void createCompany(ArrayList<company> companyList){
-        companyList.add(new company(this));
+        companyList.add(new woodCompany(this));
         System.out.println("The citizen created a company");
         return;
     }

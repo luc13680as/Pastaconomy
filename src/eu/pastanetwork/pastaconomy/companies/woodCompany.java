@@ -7,7 +7,8 @@ public class woodCompany extends company{
         super(creator);
     }
 
-    public void produce(){
+    @Override
+    public void Produce(){
         System.out.println("Wood was produced");
     }
 }

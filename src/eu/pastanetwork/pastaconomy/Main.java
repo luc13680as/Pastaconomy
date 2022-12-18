@@ -1,6 +1,6 @@
 package eu.pastanetwork.pastaconomy;
 
-import eu.pastanetwork.pastaconomy.companies.company;
+import eu.pastanetwork.pastaconomy.companies.*;
 
 import java.util.ArrayList;
 
@@ -26,6 +26,7 @@ public class Main {
 
         for (int i = 0; i < companyRegistry.size(); i++){
             companyRegistry.get(i).report();
+            companyRegistry.get(i).Produce();
         }
     }
 }

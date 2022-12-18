@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class company {
+public abstract class company {
     public String name = new String("Unknown");
     private citizen boss;
     private ArrayList<citizen> employees = new ArrayList<citizen>();
@@ -58,5 +58,7 @@ public class company {
         System.out.println("Enterprise report: \nEmployees number:" + numberEmployees + "\nMax employees:" + maxEmployees + "\nMoney:" + money);
         return;
     }
+
+    public abstract void Produce();
 }
 
