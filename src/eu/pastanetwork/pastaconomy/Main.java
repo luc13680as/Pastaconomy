@@ -28,7 +28,7 @@ public class Main {
         }
 
         System.out.println("== Test part ==");
-        City mycity = new City("Pasta-City",20000);
+        City mycity = new City("Pasta-City",1000);
         System.out.println("City: " + mycity.GetCityName() + " Population: " + mycity.GetNumberPopulation() + " Compagnies: " + mycity.GetNumberCompanies());
     }
 }
