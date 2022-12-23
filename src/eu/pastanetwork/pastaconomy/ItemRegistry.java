@@ -5,9 +5,17 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class ItemRegistry {
+    private static ItemRegistry instance;
     private ArrayList<Item> items;
 
-    public ItemRegistry(){
+    public static ItemRegistry getInstance(){
+        if (instance == null){
+            instance = new ItemRegistry();
+        }
+        return instance;
+    }
+
+    private ItemRegistry(){
         this.items = new ArrayList<>();
         InitRegistry();
     }

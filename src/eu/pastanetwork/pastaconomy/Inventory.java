@@ -12,7 +12,11 @@ public class Inventory {
     public Inventory(int sizeProvided){
         this.maximumSizeInventory = sizeProvided;
         this.inventorySlots = new HashMap<Item, Integer>();
-        this.registry = new ItemRegistry();
+        this.registry = ItemRegistry.getInstance();
+    }
+
+    public Inventory(){
+        this(27);
     }
 
     public void AddItemToInventory(String itemName){}
