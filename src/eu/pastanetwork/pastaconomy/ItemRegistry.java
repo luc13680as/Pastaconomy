@@ -21,7 +21,7 @@ public class ItemRegistry {
     }
 
     public boolean AddItem(String itemName, String description ,int maxSlotQuantity){
-        if (!this.HasItem(itemName)){
+        if (this.CheckItemExist(itemName)){
             return false;
         }
         this.items.add(new Item(itemName, description, maxSlotQuantity));
@@ -44,8 +44,10 @@ public class ItemRegistry {
         this.AddItem("Wood");
         this.AddItem("Stone");
         this.AddItem("Coal");
-        this.AddItem("Iron");
-        this.AddItem("Gold");
+        this.AddItem("Iron_ore");
+        this.AddItem("Iron_ingot");
+        this.AddItem("Gold_ore");
+        this.AddItem("Gold_ingot");
         this.AddItem("Pickaxe", 1);
         this.AddItem("Axe", 1);
         this.AddItem("Hoe", 1);
@@ -53,30 +55,28 @@ public class ItemRegistry {
         this.AddItem("Hammer", 1);
     }
 
-    public List<Item> GetItemsList(){
+    private List<Item> GetItemsList(){
         return this.items;
     }
 
-    public boolean HasItem(String itemName){
-        /*for (int i=0; i == items.size(); i++) {
-            if (items.get(i).getName() == itemName) {
-                return true;
-            }
-        }*/
-        for (Item item : this.items){
-            if (item.getName().equals(itemName)){
-                return true;
+    private Item FindItem(String itemName){
+        for (Item itemLoop : this.items){
+            if (itemLoop.getName().equals(itemName)){
+                return itemLoop;
             }
         }
-        return false;
+        return null;
     }
 
-    public Item getItem(String itemName){
-        for (Item item : this.items){
-            if (item.getName().equals(itemName)){
-                return item;
-            }
+    public boolean CheckItemExist(String itemName){
+        return this.FindItem(itemName) != null;
+    }
+
+    public Item GetItem(String itemName){
+        Item item = this.FindItem(itemName);
+        if(item == null){
+            throw new NoSuchElementException("Item with name " + itemName + " not found in registry");
         }
-        throw new NoSuchElementException("Item with name " + itemName + " not found in registry");
+        return item;
     }
 }
