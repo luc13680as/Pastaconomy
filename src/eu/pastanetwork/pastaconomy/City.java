@@ -30,7 +30,7 @@ public class City {
             return;
         }
 
-        for(int i=0; i <= numberOfCitizen; i++){
+        for(int i=0; i < numberOfCitizen; i++){
             cityPopulation.add(new citizen());
         }
 
@@ -71,7 +71,6 @@ public class City {
                 oneCitizen.createCompany(this.cityCompanies);
             }
             i++;
-            System.out.println("[" + i + "]");
         }
     }
 

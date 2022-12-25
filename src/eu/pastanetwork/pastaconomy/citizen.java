@@ -1,20 +1,74 @@
 package eu.pastanetwork.pastaconomy;
 
+import eu.pastanetwork.pastaconomy.companies.ForestryCompany;
 import eu.pastanetwork.pastaconomy.companies.company;
-import eu.pastanetwork.pastaconomy.companies.woodCompany;
 
 import java.util.ArrayList;
 
 public class citizen {
-    private String name = "Unknown";
-    private String lastName = "Unknown";
+    private String name;
+    private String lastName;
+    private Inventory backpack;
     private int food = 20;
     private int health = 20;
-    private int money = 0;
-    //private inventory backpack = new inventory();
-
+    private int money;
     private boolean hasJob = false;
 
+    public citizen(){
+        this("Unknown", "Unknown", 0);
+    }
+
+    public citizen(String providedName, String providedLastName, int providedMoney){
+        this.name = providedName;
+        this.lastName = providedLastName;
+        this.money = providedMoney;
+        this.backpack = new Inventory(9);
+    }
+    public void ReceiveMoney(int salary){
+        this.money += salary;
+    }
+    public boolean SpendMoney(int moneyToSpend){
+        if (moneyToSpend > this.money){
+            return false;
+        }
+        this.money -= moneyToSpend;
+        return true;
+    }
+    public int GetMoney(){
+        return this.money;
+    }
+
+    public int GetFood(){
+        return this.food;
+    }
+    public void GainFood(int foodToGain){
+        this.food += foodToGain;
+        if (this.food > 20){
+            this.food = 20;
+        }
+    }
+    public void LoseFood(int foodToLose){
+        this.food -= foodToLose;
+        if (this.food < 0){
+            this.food = 0;
+            this.LoseHealth(1);
+        }
+    }
+    public int GetHealth(){
+        return this.health;
+    }
+    public void GainHealth(int healthToGain){
+        this.health += healthToGain;
+        if (this.health > 20){
+            this.health = 20;
+        }
+    }
+    public void LoseHealth(int healthToLose){
+        this.health -= healthToLose;
+        if (this.health < 0){
+            this.health = 0;
+        }
+    }
     public void sayHello(){
         System.out.println("Hi ! My name is " + name + " " + lastName + "\nI have " + health + " HP and " + food + " food point !");
         return;
@@ -37,33 +91,21 @@ public class citizen {
             if (companyResponse){
                 boolean companyStatus = companyList.get(i).recruitEmployees(this);
                 if (companyStatus){
-                    System.out.println("The citizen has been recruited inside an company");
                     hasJob = true;
                     return true;
                 }
-                System.out.println("The citizen has been refused inside an company");
             }
         }
         return false;
     }
 
     public void createCompany(ArrayList<company> companyList){
-        companyList.add(new woodCompany(this));
+        companyList.add(new ForestryCompany(this));
         this.hasJob = true;
-        System.out.println("The citizen created a company");
         return;
     }
 
-    /*public void removeEmployeeFromCompany(company Company, citizen target){
-        try {
-            Company.DismissEmployee(target);
-        }
-        catch (IllegalArgumentException exception) {
-            System.out.println("Error: " + exception.getMessage());
-        }
-    }*/
-
-    /*public void LeaveCompany(){
-        hasJob = false;
-    }*/
+    public void LeaveCompany(){
+        this.hasJob = false;
+    }
 }
