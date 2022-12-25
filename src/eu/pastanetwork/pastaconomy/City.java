@@ -3,6 +3,7 @@ package eu.pastanetwork.pastaconomy;
 import eu.pastanetwork.pastaconomy.companies.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class City {
     String cityName;
@@ -25,19 +26,15 @@ public class City {
     public City(String nameofcity,int numberOfCitizen){
         this.cityPopulation = new ArrayList<citizen>();
         this.cityCompanies = new ArrayList<company>();
-
         if(numberOfCitizen <= 1){
             return;
         }
-
         for(int i=0; i < numberOfCitizen; i++){
             cityPopulation.add(new citizen());
         }
-
-        //Set city's name
         this.cityName = nameofcity;
-
         this.InitPopulation();
+
     }
 
     //Methods related to the city

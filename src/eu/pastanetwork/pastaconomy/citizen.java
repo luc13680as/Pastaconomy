@@ -3,6 +3,7 @@ package eu.pastanetwork.pastaconomy;
 import eu.pastanetwork.pastaconomy.companies.*;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class citizen {
     private String name;
@@ -12,6 +13,16 @@ public class citizen {
     private int health = 20;
     private int money;
     private boolean hasJob = false;
+    private static final ArrayList<Class<? extends company>> COMPANY_TYPES = new ArrayList<>();
+
+    static {
+        // Get all subclasses of Company using reflection
+        for (Class<?> clazz : citizen.class.getDeclaredClasses()) {
+            if (company.class.isAssignableFrom(clazz) && !clazz.isInterface()) {
+                COMPANY_TYPES.add(clazz.asSubclass(company.class));
+            }
+        }
+    }
 
     public citizen(){
         this("Unknown", "Unknown", 0);
@@ -99,9 +110,18 @@ public class citizen {
     }
 
     public void createCompany(ArrayList<company> companyList){
-        companyList.add(new MiningCompany(this));
-        this.hasJob = true;
-        return;
+        Random rand = new Random();
+        int index = rand.nextInt(COMPANY_TYPES.size());
+        Class<? extends company> companyType = COMPANY_TYPES.get(index);
+
+        // Create a new instance of the selected company type
+        try {
+            companyList.add(companyType.getDeclaredConstructor(citizen.class).newInstance(this));
+            this.hasJob = true;
+        } catch (ReflectiveOperationException e) {
+            // Handle exception
+        }
+        //companyList.add(new MiningCompany(this));
     }
 
     public void LeaveCompany(){
