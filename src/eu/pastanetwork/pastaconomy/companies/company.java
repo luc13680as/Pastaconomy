@@ -121,6 +121,9 @@ public abstract class company {
     }
 
     protected boolean isRequirementCompleted(){
+        if (this.productionToolRequirement == null){
+            return true;
+        }
         if(!companyInventory.CheckItemExist(this.productionToolRequirement)){
             return false;
         }
