@@ -10,7 +10,7 @@ public class FishingCompany extends company{
         this.productionToolRequirement = "Fishing_rod";
         this.possibleProductionList = new ArrayList<>();
         this.possibleProductionList.add("Fish");
-        this.productionItem = "Fish";
+        this.selectNewProductionItem();
         this.lowerProductionPossible = 32;
         this.upperProductionPossible = 128;
         this.efficiencyWithoutRequirement = 0.50f;

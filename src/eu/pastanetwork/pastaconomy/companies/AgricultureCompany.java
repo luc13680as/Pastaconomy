@@ -10,7 +10,7 @@ public class AgricultureCompany extends company{
         this.productionToolRequirement = "Hoe";
         this.possibleProductionList = new ArrayList<>();
         this.possibleProductionList.add("Wheat");
-        this.productionItem = "Wheat";
+        this.selectNewProductionItem();
         this.lowerProductionPossible = 32;
         this.upperProductionPossible = 128;
         this.efficiencyWithoutRequirement = 0.50f;

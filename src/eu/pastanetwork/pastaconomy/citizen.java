@@ -1,7 +1,6 @@
 package eu.pastanetwork.pastaconomy;
 
-import eu.pastanetwork.pastaconomy.companies.ForestryCompany;
-import eu.pastanetwork.pastaconomy.companies.company;
+import eu.pastanetwork.pastaconomy.companies.*;
 
 import java.util.ArrayList;
 
@@ -100,7 +99,7 @@ public class citizen {
     }
 
     public void createCompany(ArrayList<company> companyList){
-        companyList.add(new ForestryCompany(this));
+        companyList.add(new MiningCompany(this));
         this.hasJob = true;
         return;
     }

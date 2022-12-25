@@ -12,7 +12,7 @@ public class ForestryCompany extends company{
         this.productionToolRequirement = "Axe";
         this.possibleProductionList = new ArrayList<>();
         this.possibleProductionList.add("Wood");
-        this.productionItem = "Wood";
+        this.selectNewProductionItem();
         this.lowerProductionPossible = 16;
         this.upperProductionPossible = 64;
         this.efficiencyWithoutRequirement = 0.10f;

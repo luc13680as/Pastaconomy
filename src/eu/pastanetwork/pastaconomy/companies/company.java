@@ -87,6 +87,12 @@ public abstract class company {
     This part concerns the production of goods and the payment of wages.
      */
 
+    protected void selectNewProductionItem(){
+        Random r = new Random();
+        int selectedIndex = r.nextInt(this.possibleProductionList.size());
+        this.productionItem = this.possibleProductionList.get(selectedIndex);
+    }
+
     protected int getProductionAmount(){
         Random r = new Random();
         return r.nextInt(this.upperProductionPossible-this.lowerProductionPossible) + this.lowerProductionPossible;
