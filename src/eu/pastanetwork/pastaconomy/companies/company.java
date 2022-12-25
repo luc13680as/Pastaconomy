@@ -87,7 +87,7 @@ public abstract class company {
     This part concerns the production of goods and the payment of wages.
      */
 
-    private int getProductionAmount(){
+    protected int getProductionAmount(){
         Random r = new Random();
         return r.nextInt(this.upperProductionPossible-this.lowerProductionPossible) + this.lowerProductionPossible;
     }
@@ -114,14 +114,14 @@ public abstract class company {
         }
     }
 
-    private boolean isRequirementCompleted(){
+    protected boolean isRequirementCompleted(){
         if(!companyInventory.CheckItemExist(this.productionToolRequirement)){
             return false;
         }
         return true;
     }
 
-    private int getProductionCost(int production){
+    protected int getProductionCost(int production){
         return (int)Math.round(production / this.getSalaryCost());
     }
 }
