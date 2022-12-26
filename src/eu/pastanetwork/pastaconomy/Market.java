@@ -3,13 +3,15 @@ package eu.pastanetwork.pastaconomy;
 import eu.pastanetwork.pastaconomy.companies.company;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Market {
-    ArrayList<Order> buyOrder;
-    ArrayList<Order> sellOrder;
+    ArrayList<Order> orderList;
     City cityOfMarket;
     ItemRegistry itemRegistry;
-    private static class Order{
+    public static class Order{
         public enum TypeOrder{
             SELL, BUY
         }
@@ -23,8 +25,7 @@ public class Market {
     }
     public Market(City theCity){
         this.cityOfMarket = theCity;
-        this.buyOrder = new ArrayList<>();
-        this.sellOrder = new ArrayList<>();
+        this.orderList = new ArrayList<>();
         this.itemRegistry = ItemRegistry.getInstance();
     }
 
@@ -37,11 +38,10 @@ public class Market {
         createdOrder.price = thePrice;
         if (theTypeofOrder == "sell"){
             createdOrder.type = Order.TypeOrder.SELL;
-            this.buyOrder.add(createdOrder);
         } else {
             createdOrder.type = Order.TypeOrder.BUY;
-            this.sellOrder.add(createdOrder);
         }
+        this.orderList.add(createdOrder);
         return true;
     }
 
@@ -61,5 +61,24 @@ public class Market {
         if ((theAmount <= 0) || (thePrice <= 0)){
             throw new IllegalArgumentException("Amount or price cannot be lower than 0");
         }
+    }
+
+    public ArrayList<Order> searchOrder(String typeOfOrder, String theItem){
+        Stream<Order> stream = this.orderList.stream();
+        if(!(typeOfOrder.equals("any")) && !(typeOfOrder.equals("sell")) && !(typeOfOrder.equals("buy"))){
+            throw new IllegalArgumentException("Wrong type of order");
+        }
+        if (!this.itemRegistry.CheckItemExist(theItem)){
+            throw new IllegalArgumentException("Item doesn't exist in the item registry");
+        }
+        if(!typeOfOrder.equals("any")){
+            if(typeOfOrder.equals("buy")){
+                stream.filter(order -> order.type.equals(Order.TypeOrder.BUY));
+            } else if (typeOfOrder.equals("sell")) {
+                stream.filter(order -> order.type.equals(Order.TypeOrder.SELL));
+            }
+        }
+        stream.filter(order -> order.item.equals(theItem));
+        return stream.collect(Collectors.toCollection(ArrayList::new));
     }
 }
