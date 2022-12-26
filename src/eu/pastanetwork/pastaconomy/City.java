@@ -4,6 +4,7 @@ import eu.pastanetwork.pastaconomy.companies.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class City {
     String cityName;
@@ -78,9 +79,14 @@ public class City {
     public void GetCompany(int indexOfCompany){}
     public void GetCompanyIndex(company companyToGetIndexFrom){}
 
+    //Methods related to Market
     public void CreateMarket(){
         Market theMarket = new Market(this);
         this.cityMarkets.add(theMarket);
+    }
+
+    public void DeleteMarket(){
+        this.cityMarkets.remove(new Random().nextInt(this.cityMarkets.size()));
     }
 
 }
