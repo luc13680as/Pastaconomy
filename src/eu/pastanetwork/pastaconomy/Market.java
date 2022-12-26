@@ -21,7 +21,7 @@ public class Market {
         public Object to;
         public String item;
         public int amount;
-        public double price;
+        public int price;
 
     }
     public Market(City theCity){
@@ -30,7 +30,7 @@ public class Market {
         this.itemRegistry = ItemRegistry.getInstance();
     }
 
-    public boolean placeOrder(String theTypeofOrder, Object theFrom, String theItem, int theAmount, double thePrice){
+    public boolean placeOrder(String theTypeofOrder, Object theFrom, String theItem, int theAmount, int thePrice){
         checkPlaceOrder(theTypeofOrder, theFrom, theItem, theAmount, thePrice);
         Order createdOrder = new Order();
         createdOrder.from = theFrom;
@@ -46,7 +46,7 @@ public class Market {
         return true;
     }
 
-    private void checkPlaceOrder(String theTypeofOrder, Object theFrom, String theItem, int theAmount, double thePrice){
+    private void checkPlaceOrder(String theTypeofOrder, Object theFrom, String theItem, int theAmount, int thePrice){
         if (!theTypeofOrder.equals("sell") && !theTypeofOrder.equals("buy")){
             throw new IllegalArgumentException("Wrong type of order");
         }
@@ -99,14 +99,9 @@ public class Market {
             throw new IllegalArgumentException("Item doesn't exist in the item registry");
         }
     }
-    private void checkSearchOrder(int theAmount){
-        if (theAmount < 0){
-            throw new IllegalArgumentException("Amount cannot be lower than 0");
-        }
-    }
-    private void checkSearchOrder(double thePrice){
-        if (thePrice < 0){
-            throw new IllegalArgumentException("Price cannot be lower than 0");
+    private void checkSearchOrder(int theAmountPrice){
+        if (theAmountPrice < 0){
+            throw new IllegalArgumentException("Amount/Price cannot be lower than 0");
         }
     }
 }

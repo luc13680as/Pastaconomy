@@ -10,8 +10,14 @@ public class Main {
         System.out.println("Creating a bunch of citizens");
         ArrayList<citizen> population = new ArrayList<>();
         ArrayList<company> companyRegistry = new ArrayList<>();
+
+        City mycity = new City("Pasta-City",200);
+        ArrayList<Market> markets = new ArrayList<>();
+        markets.add(new Market(mycity));
+
+        Market myMarket = new Market(mycity);
         for (int i = 0; i < 30; i++){
-            population.add(new citizen());
+            population.add(new citizen(markets));
         }
 
         System.out.println("Trigger the search for work");
@@ -27,10 +33,8 @@ public class Main {
         }
 
         System.out.println("== Test part ==");
-        City mycity = new City("Pasta-City",200);
         System.out.println("City: " + mycity.GetCityName() + " Population: " + mycity.GetNumberPopulation() + " Compagnies: " + mycity.GetNumberCompanies());
 
-        Market myMarket = new Market(mycity);
         myMarket.placeOrder("buy",population.get(3),"Pickaxe",1,50);
         myMarket.placeOrder("sell",companyRegistry.get(0),"Coal",64,35);
         myMarket.placeOrder("sell",companyRegistry.get(0),"Coal",128,40);

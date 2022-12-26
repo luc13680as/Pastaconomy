@@ -31,7 +31,7 @@ public class City {
             return;
         }
         for(int i=0; i < numberOfCitizen; i++){
-            cityPopulation.add(new citizen());
+            cityPopulation.add(new citizen(this.cityMarkets));
         }
         this.cityName = nameofcity;
         this.InitPopulation();
