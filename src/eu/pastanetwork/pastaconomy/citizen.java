@@ -82,9 +82,6 @@ public class citizen {
             this.health = 0;
         }
     }
-    public void sayHello(){
-        System.out.println("Hi ! My name is " + name + " " + lastName + "\nI have " + health + " HP and " + food + " food point !");
-    }
 
     public boolean checkHasJob(){
         return this.hasJob;
