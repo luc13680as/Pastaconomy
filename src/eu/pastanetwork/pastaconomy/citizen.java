@@ -9,10 +9,10 @@ public class citizen {
     private String name;
     private String lastName;
     private Inventory backpack;
-    private int food = 20;
-    private int health = 20;
+    private int food;
+    private int health;
     private int money;
-    private boolean hasJob = false;
+    private boolean hasJob;
     private static final ArrayList<Class<? extends company>> COMPANY_TYPES; // = new ArrayList<>();
 
     static {
@@ -31,6 +31,9 @@ public class citizen {
         this.name = providedName;
         this.lastName = providedLastName;
         this.money = providedMoney;
+        this.food = 20;
+        this.health = 20;
+        this.hasJob = false;
         this.backpack = new Inventory(9);
     }
     public void ReceiveMoney(int salary){
