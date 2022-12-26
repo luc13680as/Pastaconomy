@@ -80,19 +80,14 @@ public class citizen {
     }
     public void sayHello(){
         System.out.println("Hi ! My name is " + name + " " + lastName + "\nI have " + health + " HP and " + food + " food point !");
-        return;
     }
 
     public boolean checkHasJob(){
         return this.hasJob;
     }
 
-    private void setHasJob(boolean statusJob){
-        this.hasJob = statusJob;
-    }
-
     public boolean searchWork(ArrayList<company> companyList){
-        if (this.hasJob == true){
+        if (this.hasJob){
             return true;
         }
         for(int i = 0; i < companyList.size(); i++){
@@ -119,7 +114,7 @@ public class citizen {
             this.hasJob = true;
         } catch (ReflectiveOperationException e) {
             // Handle exception
-            companyList.add(new AgricultureCompany(this);
+            companyList.add(new AgricultureCompany(this));
             this.hasJob = true;
         }
     }
