@@ -11,7 +11,7 @@ public class citizen {
     private Inventory backpack;
     private int food;
     private int health;
-    private int money;
+    private double money;
     private boolean hasJob;
     private ArrayList<Market> markets;
     private static final ArrayList<Class<? extends company>> COMPANY_TYPES; // = new ArrayList<>();
@@ -37,17 +37,19 @@ public class citizen {
         this.hasJob = false;
         this.backpack = new Inventory(9);
     }
-    public void ReceiveMoney(int salary){
-        this.money += salary;
+    public void ReceiveMoney(double moneyReceived){
+        if (moneyReceived > 0){
+            this.money += moneyReceived;
+        }
     }
-    public boolean SpendMoney(int moneyToSpend){
+    public boolean SpendMoney(double moneyToSpend){
         if (moneyToSpend > this.money){
             return false;
         }
         this.money -= moneyToSpend;
         return true;
     }
-    public int GetMoney(){
+    public double GetMoney(){
         return this.money;
     }
 

@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Random;
 
 public abstract class company {
-    protected String companyName = new String("Unknown");
+    protected String companyName;
     protected ArrayList<citizen> employees;
     protected Inventory companyInventory;
-    protected int maxEmployees = 5;
+    protected int maxEmployees;
     protected float recruitingChances;
-    protected int money = 0;
+    protected int money;
     protected ArrayList<Market> markets;
 
     //Variable for subclasses to define
@@ -35,6 +35,8 @@ public abstract class company {
         this.companyName = nameofcompany;
         this.companyInventory = new Inventory();
         this.employees.add(creator);
+        this.maxEmployees = 5;
+        this.money = 1000;
     }
     public void setName(String companyNameProvided){
         this.companyName = companyNameProvided;
@@ -42,7 +44,9 @@ public abstract class company {
     public String getName() { return this.companyName; }
 
     public void ReceiveMoney(int moneyReceived){
-        this.money += moneyReceived;
+        if (moneyReceived > 0){
+            this.money += moneyReceived;
+        }
     }
     public boolean SpendMoney(int moneyToSpend){
         if (moneyToSpend > this.money){
