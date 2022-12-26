@@ -107,9 +107,7 @@ public class citizen {
     }
 
     public void createCompany(ArrayList<company> companyList){
-        Random rand = new Random();
-        int index = rand.nextInt(COMPANY_TYPES.size());
-        Class<? extends company> companyType = COMPANY_TYPES.get(index);
+        Class<? extends company> companyType = COMPANY_TYPES.get(new Random().nextInt(COMPANY_TYPES.size()));
 
         // Create a new instance of the selected company type
         try {
