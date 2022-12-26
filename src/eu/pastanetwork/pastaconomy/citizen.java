@@ -1,7 +1,7 @@
 package eu.pastanetwork.pastaconomy;
 
 import eu.pastanetwork.pastaconomy.companies.*;
-
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -13,15 +13,14 @@ public class citizen {
     private int health = 20;
     private int money;
     private boolean hasJob = false;
-    private static final ArrayList<Class<? extends company>> COMPANY_TYPES = new ArrayList<>();
+    private static final ArrayList<Class<? extends company>> COMPANY_TYPES; // = new ArrayList<>();
 
     static {
-        // Get all subclasses of Company using reflection
-        for (Class<?> clazz : citizen.class.getDeclaredClasses()) {
-            if (company.class.isAssignableFrom(clazz) && !clazz.isInterface()) {
-                COMPANY_TYPES.add(clazz.asSubclass(company.class));
-            }
-        }
+        COMPANY_TYPES = new ArrayList<>();
+        COMPANY_TYPES.add(AgricultureCompany.class);
+        COMPANY_TYPES.add(FishingCompany.class);
+        COMPANY_TYPES.add(ForestryCompany.class);
+        COMPANY_TYPES.add(MiningCompany.class);
     }
 
     public citizen(){
@@ -120,8 +119,9 @@ public class citizen {
             this.hasJob = true;
         } catch (ReflectiveOperationException e) {
             // Handle exception
+            companyList.add(new AgricultureCompany(this);
+            this.hasJob = true;
         }
-        //companyList.add(new MiningCompany(this));
     }
 
     public void LeaveCompany(){

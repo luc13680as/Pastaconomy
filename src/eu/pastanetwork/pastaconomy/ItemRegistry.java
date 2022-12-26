@@ -51,7 +51,7 @@ public class ItemRegistry {
         this.AddItem("Pickaxe", 1);
         this.AddItem("Axe", 1);
         this.AddItem("Hoe", 1);
-        this.AddItem("Fishing_Rod", 1);
+        this.AddItem("Fishing_rod", 1);
         this.AddItem("Hammer", 1);
     }
 
