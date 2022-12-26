@@ -4,6 +4,7 @@ import eu.pastanetwork.pastaconomy.companies.company;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -64,21 +65,24 @@ public class Market {
     }
 
     public ArrayList<Order> searchOrder(String typeOfOrder, String theItem){
-        Stream<Order> stream = this.orderList.stream();
         if(!(typeOfOrder.equals("any")) && !(typeOfOrder.equals("sell")) && !(typeOfOrder.equals("buy"))){
             throw new IllegalArgumentException("Wrong type of order");
         }
         if (!this.itemRegistry.CheckItemExist(theItem)){
             throw new IllegalArgumentException("Item doesn't exist in the item registry");
         }
-        if(!typeOfOrder.equals("any")){
-            if(typeOfOrder.equals("buy")){
-                stream.filter(order -> order.type.equals(Order.TypeOrder.BUY));
-            } else if (typeOfOrder.equals("sell")) {
-                stream.filter(order -> order.type.equals(Order.TypeOrder.SELL));
-            }
+
+        Predicate<Order> typeOfFilter;
+        if(typeOfOrder.equals("buy")){
+            typeOfFilter = o -> o.type.equals(Order.TypeOrder.BUY);
+            //stream.filter(order -> order.type.equals(Order.TypeOrder.BUY));
+        } else{
+            typeOfFilter = o -> o.type.equals(Order.TypeOrder.SELL);
+            //stream.filter(order -> order.type.equals(Order.TypeOrder.SELL));
         }
-        stream.filter(order -> order.item.equals(theItem));
-        return stream.collect(Collectors.toCollection(ArrayList::new));
+        return this.orderList.parallelStream()
+                .filter(typeOfFilter)
+                .filter(order -> order.item.equals(theItem))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }

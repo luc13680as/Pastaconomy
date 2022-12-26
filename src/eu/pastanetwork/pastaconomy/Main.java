@@ -1,7 +1,6 @@
 package eu.pastanetwork.pastaconomy;
 
 import eu.pastanetwork.pastaconomy.companies.*;
-
 import java.util.ArrayList;
 
 public class Main {
@@ -31,5 +30,14 @@ public class Main {
         City mycity = new City("Pasta-City",200);
         System.out.println("City: " + mycity.GetCityName() + " Population: " + mycity.GetNumberPopulation() + " Compagnies: " + mycity.GetNumberCompanies());
 
+        Market myMarket = new Market(mycity);
+        myMarket.placeOrder("buy",population.get(3),"Pickaxe",1,50);
+
+        ArrayList<Market.Order> returnedList = myMarket.searchOrder("buy","Pickaxe");
+        int i = 0;
+        for (Market.Order o : returnedList){
+            System.out.println("[" + i + "] " + o.type + " - " + o.item + " - " + o.amount + " - " + o.price + "€");
+            i++;
+        }
     }
 }
