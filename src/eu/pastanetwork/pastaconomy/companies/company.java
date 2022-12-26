@@ -1,6 +1,7 @@
 package eu.pastanetwork.pastaconomy.companies;
 
 import eu.pastanetwork.pastaconomy.Inventory;
+import eu.pastanetwork.pastaconomy.Market;
 import eu.pastanetwork.pastaconomy.citizen;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ public abstract class company {
     protected int maxEmployees = 5;
     protected float recruitingChances;
     protected int money = 0;
+    protected ArrayList<Market> markets;
 
     //Variable for subclasses to define
     protected String productionToolRequirement;

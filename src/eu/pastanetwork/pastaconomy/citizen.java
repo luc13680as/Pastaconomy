@@ -13,6 +13,7 @@ public class citizen {
     private int health;
     private int money;
     private boolean hasJob;
+    private ArrayList<Market> markets;
     private static final ArrayList<Class<? extends company>> COMPANY_TYPES; // = new ArrayList<>();
 
     static {

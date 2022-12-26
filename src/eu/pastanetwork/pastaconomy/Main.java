@@ -32,10 +32,15 @@ public class Main {
 
         Market myMarket = new Market(mycity);
         myMarket.placeOrder("buy",population.get(3),"Pickaxe",1,50);
+        myMarket.placeOrder("sell",companyRegistry.get(0),"Coal",64,35);
+        myMarket.placeOrder("sell",companyRegistry.get(0),"Coal",128,40);
+        myMarket.placeOrder("sell",companyRegistry.get(0),"Coal",23,560);
+        myMarket.placeOrder("sell",companyRegistry.get(0),"Coal",48,430);
+        myMarket.placeOrder("sell",companyRegistry.get(0),"Coal",36,250);
+        ArrayList<Market.Order> returnedList = myMarket.searchOrder("sell","Coal");
 
-        ArrayList<Market.Order> returnedList = myMarket.searchOrder("buy","Pickaxe");
         int i = 0;
-        for (Market.Order o : returnedList){
+        for (Market.Order o : myMarket.displayOrders()){
             System.out.println("[" + i + "] " + o.type + " - " + o.item + " - " + o.amount + " - " + o.price + "€");
             i++;
         }

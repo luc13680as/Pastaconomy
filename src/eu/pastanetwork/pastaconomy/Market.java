@@ -31,7 +31,7 @@ public class Market {
     }
 
     public boolean placeOrder(String theTypeofOrder, Object theFrom, String theItem, int theAmount, double thePrice){
-        checkOrder(theTypeofOrder, theFrom, theItem, theAmount, thePrice);
+        checkPlaceOrder(theTypeofOrder, theFrom, theItem, theAmount, thePrice);
         Order createdOrder = new Order();
         createdOrder.from = theFrom;
         createdOrder.item = theItem;
@@ -46,7 +46,7 @@ public class Market {
         return true;
     }
 
-    private void checkOrder(String theTypeofOrder, Object theFrom, String theItem, int theAmount, double thePrice){
+    private void checkPlaceOrder(String theTypeofOrder, Object theFrom, String theItem, int theAmount, double thePrice){
         if (!theTypeofOrder.equals("sell") && !theTypeofOrder.equals("buy")){
             throw new IllegalArgumentException("Wrong type of order");
         }
@@ -64,25 +64,49 @@ public class Market {
         }
     }
 
+    public ArrayList<Order> displayOrders(){
+        return this.orderList.stream().collect(Collectors.toCollection(ArrayList::new));
+    }
+
     public ArrayList<Order> searchOrder(String typeOfOrder, String theItem){
-        if(!(typeOfOrder.equals("any")) && !(typeOfOrder.equals("sell")) && !(typeOfOrder.equals("buy"))){
-            throw new IllegalArgumentException("Wrong type of order");
-        }
-        if (!this.itemRegistry.CheckItemExist(theItem)){
-            throw new IllegalArgumentException("Item doesn't exist in the item registry");
-        }
+        checkSearchOrderTypeOfOrder(typeOfOrder);
+        checkSearchOrderItem(theItem);
 
         Predicate<Order> typeOfFilter;
         if(typeOfOrder.equals("buy")){
             typeOfFilter = o -> o.type.equals(Order.TypeOrder.BUY);
-            //stream.filter(order -> order.type.equals(Order.TypeOrder.BUY));
         } else{
             typeOfFilter = o -> o.type.equals(Order.TypeOrder.SELL);
-            //stream.filter(order -> order.type.equals(Order.TypeOrder.SELL));
         }
         return this.orderList.parallelStream()
                 .filter(typeOfFilter)
                 .filter(order -> order.item.equals(theItem))
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private void checkSearchOrderTypeOfOrder(String theTypeofOrder){
+        if(!(theTypeofOrder.equals("any")) && !(theTypeofOrder.equals("sell")) && !(theTypeofOrder.equals("buy"))){
+            throw new IllegalArgumentException("Wrong type of order");
+        }
+    }
+    private void checkSearchOrder(Object theFrom){
+        if (!(theFrom instanceof citizen) && !(theFrom instanceof company)) {
+            throw new IllegalArgumentException("Only a company or a citizen can place an order");
+        }
+    }
+    private void checkSearchOrderItem(String theItem){
+        if (!this.itemRegistry.CheckItemExist(theItem)){
+            throw new IllegalArgumentException("Item doesn't exist in the item registry");
+        }
+    }
+    private void checkSearchOrder(int theAmount){
+        if (theAmount < 0){
+            throw new IllegalArgumentException("Amount cannot be lower than 0");
+        }
+    }
+    private void checkSearchOrder(double thePrice){
+        if (thePrice < 0){
+            throw new IllegalArgumentException("Price cannot be lower than 0");
+        }
     }
 }
