@@ -9,7 +9,7 @@ public class City {
     String cityName;
     ArrayList<citizen> cityPopulation;
     ArrayList<company> cityCompanies;
-    //ArrayList<Market> cityMarkets;
+    ArrayList<Market> cityMarkets;
 
     //Default constructors with defaults values
     public City(){
@@ -34,7 +34,7 @@ public class City {
         }
         this.cityName = nameofcity;
         this.InitPopulation();
-
+        this.cityMarkets = new ArrayList<>();
     }
 
     //Methods related to the city
@@ -77,5 +77,10 @@ public class City {
 
     public void GetCompany(int indexOfCompany){}
     public void GetCompanyIndex(company companyToGetIndexFrom){}
+
+    public void CreateMarket(){
+        Market theMarket = new Market(this);
+        this.cityMarkets.add(theMarket);
+    }
 
 }
