@@ -15,7 +15,7 @@ public abstract class company {
     protected int maxEmployees;
     protected float recruitingChances;
     protected int money;
-    protected ArrayList<Market> markets;
+    protected Market selectedMarket;
 
     //Variable for subclasses to define
     protected String productionToolRequirement;
@@ -140,8 +140,20 @@ public abstract class company {
         return (int)Math.round(production / this.getSalaryCost());
     }
 
-    public void addMarketList(ArrayList<Market> theList){
-        this.markets = theList;
+    public void addMarket(Market theMarket){
+        this.selectedMarket = theMarket;
     }
+
+    public boolean hasMarket(){
+        if (this.selectedMarket == null){
+            return false;
+        }
+        return true;
+    }
+
+
+    public void sellProduction(){}
+
+    public void buyRequirements(){}
 }
 

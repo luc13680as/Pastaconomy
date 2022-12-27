@@ -1,5 +1,6 @@
 package eu.pastanetwork.pastaconomy;
 
+import com.sun.jdi.Value;
 import eu.pastanetwork.pastaconomy.companies.*;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class City {
     public City(String nameofcity,int numberOfCitizen){
         this.cityPopulation = new ArrayList<citizen>();
         this.cityCompanies = new ArrayList<company>();
+        this.cityMarkets = new ArrayList<>();
         if(numberOfCitizen <= 1){
             return;
         }
@@ -36,8 +38,6 @@ public class City {
         this.cityName = nameofcity;
         this.InitPopulation();
 
-        this.cityMarkets = new ArrayList<>();
-        this.giveMarketList();
     }
 
     //Methods related to the city
@@ -91,12 +91,9 @@ public class City {
         this.cityMarkets.remove(new Random().nextInt(this.cityMarkets.size()));
     }
 
-    private void giveMarketList(){
-        for (citizen theCitizen : this.cityPopulation){
-            theCitizen.addMarketList(this.cityMarkets);
-        }
-        for (company theCompany : this.cityCompanies){
-            theCompany.addMarketList(this.cityMarkets);
+    private void giveMarket(ArrayList<company> target, Market selectedMarket){
+        for (company theCompany : target){
+            theCompany.addMarket(selectedMarket);
         }
     }
 
