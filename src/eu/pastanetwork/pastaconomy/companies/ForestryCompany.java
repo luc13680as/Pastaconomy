@@ -17,5 +17,6 @@ public class ForestryCompany extends company{
         this.upperProductionPossible = 64;
         this.efficiencyWithoutRequirement = 0.10f;
         this.baseSalary = 50;
+        this.fixedCostOfProduction = 75;
     }
 }

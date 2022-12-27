@@ -11,7 +11,7 @@ public class City {
     String cityName;
     ArrayList<citizen> cityPopulation;
     ArrayList<company> cityCompanies;
-    ArrayList<Market> cityMarkets;
+    Market cityMarket;
 
     //Default constructors with defaults values
     public City(){
@@ -28,7 +28,7 @@ public class City {
     public City(String nameofcity,int numberOfCitizen){
         this.cityPopulation = new ArrayList<citizen>();
         this.cityCompanies = new ArrayList<company>();
-        this.cityMarkets = new ArrayList<>();
+        this.cityMarket = new Market(this);
         if(numberOfCitizen <= 1){
             return;
         }
@@ -38,6 +38,17 @@ public class City {
         this.cityName = nameofcity;
         this.InitPopulation();
 
+        this.giveMarketToCompanies(this.cityCompanies, this.cityMarket);
+        this.giveMarketToCitizens(this.cityPopulation, this.cityMarket);
+
+        for (company workingCompany : this.cityCompanies){
+            workingCompany.produce();
+        }
+        int i=0;
+        for (Market.Order o : this.cityMarket.displayOrders()){
+            System.out.println("[" + i + "] " + o.type + " - " + o.item + " - " + o.amount + " - " + o.price + "€");
+            i++;
+        }
     }
 
     //Methods related to the city
@@ -58,42 +69,35 @@ public class City {
 
 
     //Methods related to citizens
-    public void AddCitizenToCity(citizen thechosenone){}
-    public void RemoveCitizenFromCity(citizen thenotchosenone){}
-    public void GetCitizen(int indexOfCitizen){}
-    public void GetCitizenIndex(citizen citizenToGetIndexFrom){}
-
     private void InitPopulation(){
-        int i = 0;
         for (citizen oneCitizen : cityPopulation){
             boolean state = oneCitizen.searchWork(this.cityCompanies);
             if (!state){
                 oneCitizen.createCompany(this.cityCompanies);
             }
-            i++;
+        }
+    }
+    /*public void AddCitizenToCity(citizen thechosenone){}
+    public void RemoveCitizenFromCity(citizen thenotchosenone){}
+    public void GetCitizen(int indexOfCitizen){}
+    public void GetCitizenIndex(citizen citizenToGetIndexFrom){}*/
+
+    //Methods related to Companies
+    /*public void AddCompanyToCity(company thechosencompany){}
+    public void RemoveCompanyFromCity(company thenotchosencompany){}
+    public void GetCompany(int indexOfCompany){}
+    public void GetCompanyIndex(company companyToGetIndexFrom){}*/
+
+    //Methods related to Market
+    private void giveMarketToCompanies(ArrayList<company> target, Market selectedMarket){
+        for (company theCompany : target){
+            theCompany.addMarket(selectedMarket);
         }
     }
 
-    //Methods related to Companies
-    public void AddCompanyToCity(company thechosencompany){}
-    public void RemoveCompanyFromCity(company thenotchosencompany){}
-
-    public void GetCompany(int indexOfCompany){}
-    public void GetCompanyIndex(company companyToGetIndexFrom){}
-
-    //Methods related to Market
-    public void CreateMarket(){
-        Market theMarket = new Market(this);
-        this.cityMarkets.add(theMarket);
-    }
-
-    public void DeleteMarket(){
-        this.cityMarkets.remove(new Random().nextInt(this.cityMarkets.size()));
-    }
-
-    private void giveMarket(ArrayList<company> target, Market selectedMarket){
-        for (company theCompany : target){
-            theCompany.addMarket(selectedMarket);
+    private void giveMarketToCitizens(ArrayList<citizen> target, Market selectedMarket){
+        for (citizen theCitizen : target){
+            theCitizen.addMarket(selectedMarket);
         }
     }
 

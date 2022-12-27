@@ -18,5 +18,6 @@ public class MiningCompany extends company{
         this.upperProductionPossible = 64;
         this.efficiencyWithoutRequirement = 0.10f;
         this.baseSalary = 25;
+        this.fixedCostOfProduction = 75;
     }
 }

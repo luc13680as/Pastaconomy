@@ -5,9 +5,10 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        City mycity = new City("Pasta-City",200);
+        System.out.println("City: " + mycity.GetCityName() + " Population: " + mycity.GetNumberPopulation() + " Compagnies: " + mycity.GetNumberCompanies());
 
-        System.out.println("Creating a bunch of citizens");
+        /*System.out.println("Creating a bunch of citizens");
         ArrayList<citizen> population = new ArrayList<>();
         ArrayList<company> companyRegistry = new ArrayList<>();
 
@@ -29,10 +30,6 @@ public class Main {
             companyRegistry.get(i).produce();
         }
 
-        System.out.println("== Test part ==");
-        City mycity = new City("Pasta-City",200);
-        System.out.println("City: " + mycity.GetCityName() + " Population: " + mycity.GetNumberPopulation() + " Compagnies: " + mycity.GetNumberCompanies());
-        Market myMarket = new Market(mycity);
         myMarket.placeOrder("buy",population.get(3),"Pickaxe",1,50);
         myMarket.placeOrder("sell",companyRegistry.get(0),"Coal",64,35);
         myMarket.placeOrder("sell",companyRegistry.get(0),"Coal",128,40);
@@ -46,5 +43,6 @@ public class Main {
             System.out.println("[" + i + "] " + o.type + " - " + o.item + " - " + o.amount + " - " + o.price + "€");
             i++;
         }
+         */
     }
 }

@@ -15,7 +15,7 @@ public abstract class company {
     protected int maxEmployees;
     protected float recruitingChances;
     protected int money;
-    protected Market selectedMarket;
+    protected Market market;
 
     //Variable for subclasses to define
     protected String productionToolRequirement;
@@ -25,6 +25,7 @@ public abstract class company {
     protected int upperProductionPossible;
     protected float efficiencyWithoutRequirement;
     protected int baseSalary;
+    protected int fixedCostOfProduction;
 
     public company(citizen thecreator){
         this(thecreator,"Unknown");
@@ -111,7 +112,11 @@ public abstract class company {
         }
         productionQuantity = productionQuantity * employees.size();
         this.companyInventory.AddItemToInventory(productionItem, productionQuantity);
-        this.companyInventory.Display();
+        //this.companyInventory.Display();
+        if (productionQuantity > 0){
+            sellProduction(productionQuantity);
+        }
+        //return productionQuantity;
     }
 
     public int getSalaryCost(){
@@ -136,23 +141,24 @@ public abstract class company {
         return true;
     }
 
-    protected int getProductionCost(int production){
-        return (int)Math.round(production / this.getSalaryCost());
-    }
-
     public void addMarket(Market theMarket){
-        this.selectedMarket = theMarket;
+        this.market = theMarket;
     }
 
     public boolean hasMarket(){
-        if (this.selectedMarket == null){
+        if (this.market == null){
             return false;
         }
         return true;
     }
 
 
-    public void sellProduction(){}
+    public void sellProduction(int production){
+        int productionCostPerUnit = (int)Math.round((this.getSalaryCost() + this.fixedCostOfProduction) / production);
+        if(productionCostPerUnit == 0) { productionCostPerUnit = 1;}
+        int sellingPrice = productionCostPerUnit * production;
+        this.market.placeOrder("sell", this, this.productionItem, production, sellingPrice);
+    }
 
     public void buyRequirements(){}
 }

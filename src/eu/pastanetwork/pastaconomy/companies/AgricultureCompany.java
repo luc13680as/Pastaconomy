@@ -15,5 +15,6 @@ public class AgricultureCompany extends company{
         this.upperProductionPossible = 128;
         this.efficiencyWithoutRequirement = 0.50f;
         this.baseSalary = 25;
+        this.fixedCostOfProduction = 25;
     }
 }

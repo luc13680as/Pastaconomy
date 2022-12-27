@@ -36,6 +36,7 @@ public class citizen {
         this.health = 20;
         this.hasJob = false;
         this.backpack = new Inventory(9);
+        this.markets = new ArrayList<>();
     }
     public void ReceiveMoney(int moneyReceived){
         if (moneyReceived > 0){
@@ -124,7 +125,7 @@ public class citizen {
         this.hasJob = false;
     }
 
-    public void addMarketList(ArrayList<Market> theList){
-        this.markets = theList;
+    public void addMarket(Market theMarket){
+        this.markets.add(theMarket);
     }
 }
