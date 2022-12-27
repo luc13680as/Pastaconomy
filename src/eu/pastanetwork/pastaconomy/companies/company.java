@@ -26,18 +26,17 @@ public abstract class company {
     protected float efficiencyWithoutRequirement;
     protected int baseSalary;
 
-    public company(citizen thecreator, ArrayList<Market> sharedMarketList){
-        this(thecreator,"Unknown", sharedMarketList);
+    public company(citizen thecreator){
+        this(thecreator,"Unknown");
     }
 
-    public company(citizen creator, String nameofcompany, ArrayList<Market> sharedMarketList){
+    public company(citizen creator, String nameofcompany){
         this.employees = new ArrayList<citizen>();
         this.companyName = nameofcompany;
         this.companyInventory = new Inventory();
         this.employees.add(creator);
         this.maxEmployees = 5;
         this.money = 1000;
-        this.markets = sharedMarketList;
     }
     public void setName(String companyNameProvided){
         this.companyName = companyNameProvided;
@@ -139,6 +138,10 @@ public abstract class company {
 
     protected int getProductionCost(int production){
         return (int)Math.round(production / this.getSalaryCost());
+    }
+
+    public void addMarketList(ArrayList<Market> theList){
+        this.markets = theList;
     }
 }
 

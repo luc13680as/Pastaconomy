@@ -31,11 +31,13 @@ public class City {
             return;
         }
         for(int i=0; i < numberOfCitizen; i++){
-            cityPopulation.add(new citizen(this.cityMarkets));
+            cityPopulation.add(new citizen());
         }
         this.cityName = nameofcity;
         this.InitPopulation();
+
         this.cityMarkets = new ArrayList<>();
+        this.giveMarketList();
     }
 
     //Methods related to the city
@@ -87,6 +89,15 @@ public class City {
 
     public void DeleteMarket(){
         this.cityMarkets.remove(new Random().nextInt(this.cityMarkets.size()));
+    }
+
+    private void giveMarketList(){
+        for (citizen theCitizen : this.cityPopulation){
+            theCitizen.addMarketList(this.cityMarkets);
+        }
+        for (company theCompany : this.cityCompanies){
+            theCompany.addMarketList(this.cityMarkets);
+        }
     }
 
 }

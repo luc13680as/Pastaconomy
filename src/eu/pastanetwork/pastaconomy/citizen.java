@@ -24,11 +24,11 @@ public class citizen {
         COMPANY_TYPES.add(MiningCompany.class);
     }
 
-    public citizen(ArrayList<Market> sharedMarketList){
-        this("Unknown", "Unknown", 0, sharedMarketList);
+    public citizen(){
+        this("Unknown", "Unknown", 200);
     }
 
-    public citizen(String providedName, String providedLastName, int providedMoney, ArrayList<Market> sharedMarketList){
+    public citizen(String providedName, String providedLastName, int providedMoney){
         this.name = providedName;
         this.lastName = providedLastName;
         this.money = providedMoney;
@@ -36,7 +36,6 @@ public class citizen {
         this.health = 20;
         this.hasJob = false;
         this.backpack = new Inventory(9);
-        this.markets = sharedMarketList;
     }
     public void ReceiveMoney(int moneyReceived){
         if (moneyReceived > 0){
@@ -112,7 +111,7 @@ public class citizen {
 
         // Create a new instance of the selected company type
         try {
-            companyList.add(companyType.getDeclaredConstructor(citizen.class).newInstance(this, markets));
+            companyList.add(companyType.getDeclaredConstructor(citizen.class).newInstance(this));
             this.hasJob = true;
         } catch (ReflectiveOperationException e) {
             // Handle exception
@@ -123,5 +122,9 @@ public class citizen {
 
     public void LeaveCompany(){
         this.hasJob = false;
+    }
+
+    public void addMarketList(ArrayList<Market> theList){
+        this.markets = theList;
     }
 }
