@@ -2,6 +2,8 @@ package eu.pastanetwork.pastaconomy;
 
 import eu.pastanetwork.pastaconomy.companies.company;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -9,6 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Market {
+    private static final DecimalFormat df = new DecimalFormat("0.00");
     ArrayList<Order> orderList;
     City cityOfMarket;
     ItemRegistry itemRegistry;
@@ -21,7 +24,7 @@ public class Market {
         public Object to;
         public String item;
         public int amount;
-        public int price;
+        public BigDecimal price;
 
     }
     public Market(City theCity){
@@ -30,7 +33,7 @@ public class Market {
         this.itemRegistry = ItemRegistry.getInstance();
     }
 
-    public boolean placeOrder(String theTypeofOrder, Object theFrom, String theItem, int theAmount, int thePrice){
+    public boolean placeOrder(String theTypeofOrder, Object theFrom, String theItem, int theAmount, BigDecimal thePrice){
         checkPlaceOrder(theTypeofOrder, theFrom, theItem, theAmount, thePrice);
         Order createdOrder = new Order();
         createdOrder.from = theFrom;
@@ -46,7 +49,7 @@ public class Market {
         return true;
     }
 
-    private void checkPlaceOrder(String theTypeofOrder, Object theFrom, String theItem, int theAmount, int thePrice){
+    private void checkPlaceOrder(String theTypeofOrder, Object theFrom, String theItem, int theAmount, BigDecimal thePrice){
         if (!theTypeofOrder.equals("sell") && !theTypeofOrder.equals("buy")){
             throw new IllegalArgumentException("Wrong type of order");
         }
@@ -59,7 +62,7 @@ public class Market {
         if (!this.itemRegistry.CheckItemExist(theItem)){
             throw new IllegalArgumentException("Item doesn't exist in the item registry");
         }
-        if ((theAmount <= 0) || (thePrice <= 0)){
+        if (theAmount <= 0){
             throw new IllegalArgumentException("Amount or price cannot be lower than 0");
         }
     }

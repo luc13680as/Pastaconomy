@@ -152,11 +152,11 @@ public abstract class company {
         return true;
     }
 
-
     public void sellProduction(int production){
-        int productionCostPerUnit = (int)Math.round((this.getSalaryCost() + this.fixedCostOfProduction) / production);
-        if(productionCostPerUnit == 0) { productionCostPerUnit = 1;}
-        int sellingPrice = productionCostPerUnit * production;
+        //int productionCostPerUnit = (int)Math.round((this.getSalaryCost() + this.fixedCostOfProduction) / production);
+        float productionCostPerUnit = (this.getSalaryCost() + this.fixedCostOfProduction) / production;
+        //if(productionCostPerUnit == 0) { productionCostPerUnit = 1;}
+        float sellingPrice = productionCostPerUnit * production;
         this.market.placeOrder("sell", this, this.productionItem, production, sellingPrice);
     }
 
