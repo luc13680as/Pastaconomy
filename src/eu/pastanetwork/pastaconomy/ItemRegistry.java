@@ -20,43 +20,44 @@ public class ItemRegistry {
         InitRegistry();
     }
 
-    public boolean AddItem(String itemName, String description ,int maxSlotQuantity){
+    public boolean AddItem(String itemName, String description, String category, int maxSlotQuantity){
         if (this.CheckItemExist(itemName)){
             return false;
         }
-        this.items.add(new Item(itemName, description, maxSlotQuantity));
+        this.items.add(new Item(itemName, description, category, maxSlotQuantity));
         return true;
     }
 
+    public boolean AddItem(String itemName, String description, String category){
+        boolean state = AddItem(itemName, description, category, 64);
+        return state;
+    }
+
     public boolean AddItem(String itemName, int maxSlotQuantity){
-        boolean state = AddItem(itemName, "No description available", maxSlotQuantity);
+        boolean state = AddItem(itemName, "No description available", "default", maxSlotQuantity);
         return state;
     }
 
     public boolean AddItem(String itemName){
-        boolean state = AddItem(itemName, "No description available", 64);
+        boolean state = AddItem(itemName, "No description available", "default",64);
         return state;
     }
 
     private void InitRegistry(){
-        this.AddItem("Wheat");
-        this.AddItem("Fish");
-        this.AddItem("Wood");
-        this.AddItem("Stone");
-        this.AddItem("Coal");
-        this.AddItem("Iron_ore");
-        this.AddItem("Iron_ingot");
-        this.AddItem("Gold_ore");
-        this.AddItem("Gold_ingot");
-        this.AddItem("Pickaxe", 1);
-        this.AddItem("Axe", 1);
-        this.AddItem("Hoe", 1);
-        this.AddItem("Fishing_rod", 1);
-        this.AddItem("Hammer", 1);
-    }
-
-    private List<Item> GetItemsList(){
-        return this.items;
+        this.AddItem("Wheat", "No description provided", "Raw material");
+        this.AddItem("Fish", "No description provided", "Food");
+        this.AddItem("Wood", "No description provided", "Raw material");
+        this.AddItem("Stone", "No description provided", "Raw material");
+        this.AddItem("Coal", "No description provided", "Raw material");
+        this.AddItem("Iron_ore", "No description provided", "Raw material");
+        this.AddItem("Iron_ingot", "No description provided", "Raw material");
+        this.AddItem("Gold_ore", "No description provided", "Raw material");
+        this.AddItem("Gold_ingot", "No description provided", "Raw material");
+        this.AddItem("Pickaxe", "No description provided", "Tool", 1);
+        this.AddItem("Axe", "No description provided", "Tool", 1);
+        this.AddItem("Hoe", "No description provided", "Tool",1);
+        this.AddItem("Fishing_rod", "No description provided", "Tool",1);
+        this.AddItem("Hammer", "No description provided", "Tool",1);
     }
 
     private Item FindItem(String itemName){
