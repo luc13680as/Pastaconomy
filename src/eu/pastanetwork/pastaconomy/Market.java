@@ -3,6 +3,7 @@ package eu.pastanetwork.pastaconomy;
 import eu.pastanetwork.pastaconomy.companies.company;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,7 @@ public class Market {
         createdOrder.from = theFrom;
         createdOrder.item = theItem;
         createdOrder.amount = theAmount;
+        thePrice = thePrice.setScale(2, RoundingMode.HALF_EVEN);
         createdOrder.price = thePrice;
         if (theTypeofOrder == "sell"){
             createdOrder.type = Order.TypeOrder.SELL;
@@ -63,7 +65,10 @@ public class Market {
             throw new IllegalArgumentException("Item doesn't exist in the item registry");
         }
         if (theAmount <= 0){
-            throw new IllegalArgumentException("Amount or price cannot be lower than 0");
+            throw new IllegalArgumentException("Amount cannot be lower than 1");
+        }
+        if (thePrice.compareTo(new BigDecimal("0")) <= 0){
+            throw new IllegalArgumentException("price cannot be lower than 1");
         }
     }
 
@@ -92,19 +97,9 @@ public class Market {
             throw new IllegalArgumentException("Wrong type of order");
         }
     }
-    private void checkSearchOrder(Object theFrom){
-        if (!(theFrom instanceof citizen) && !(theFrom instanceof company)) {
-            throw new IllegalArgumentException("Only a company or a citizen can place an order");
-        }
-    }
     private void checkSearchOrderItem(String theItem){
         if (!this.itemRegistry.CheckItemExist(theItem)){
             throw new IllegalArgumentException("Item doesn't exist in the item registry");
-        }
-    }
-    private void checkSearchOrder(int theAmountPrice){
-        if (theAmountPrice < 0){
-            throw new IllegalArgumentException("Amount/Price cannot be lower than 0");
         }
     }
 }
