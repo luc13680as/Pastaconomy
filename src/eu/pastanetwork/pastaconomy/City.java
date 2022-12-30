@@ -8,7 +8,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Timer;
 
 public class City {
@@ -51,6 +50,9 @@ public class City {
             theCompany.paySalary();
             int productionOfCompany = theCompany.produce();
             theCompany.sellProduction(productionOfCompany);
+        }
+        for (citizen theCitizen : this.cityPopulation){
+            theCitizen.buyNeedsOnMarket();
         }
     }
 

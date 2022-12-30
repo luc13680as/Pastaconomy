@@ -9,6 +9,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class company {
     protected String companyName;
@@ -71,10 +72,11 @@ public abstract class company {
     }
 
     public boolean recruitEmployees(citizen recruit){
-        Random r = new Random();
+        //Random r = new Random();
         int low = 1;
         int high = 101;
-        int result = r.nextInt(high-low) + low;
+        //int result = r.nextInt(high-low) + low;
+        int result = ThreadLocalRandom.current().nextInt(101);
 
         if (!(this.isRecruiting()) || (result < 30)) {
             return false;
@@ -98,14 +100,16 @@ public abstract class company {
      */
 
     protected void selectNewProductionItem(){
-        Random r = new Random();
-        int selectedIndex = r.nextInt(this.possibleProductionList.size());
+        //Random r = new Random();
+        //int selectedIndex = r.nextInt(this.possibleProductionList.size());
+        int selectedIndex = ThreadLocalRandom.current().nextInt(this.possibleProductionList.size());
         this.productionItem = this.possibleProductionList.get(selectedIndex);
     }
 
     protected int getProductionAmount(){
-        Random r = new Random();
-        return r.nextInt(this.upperProductionPossible-this.lowerProductionPossible) + this.lowerProductionPossible;
+        //Random r = new Random();
+        //return r.nextInt(this.upperProductionPossible-this.lowerProductionPossible) + this.lowerProductionPossible;
+        return ThreadLocalRandom.current().nextInt(this.upperProductionPossible-this.lowerProductionPossible) + this.lowerProductionPossible;
     }
 
     public int produce(){

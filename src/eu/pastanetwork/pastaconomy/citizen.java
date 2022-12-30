@@ -2,8 +2,10 @@ package eu.pastanetwork.pastaconomy;
 
 import eu.pastanetwork.pastaconomy.companies.*;
 import java.lang.reflect.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class citizen {
     private String name;
@@ -13,6 +15,7 @@ public class citizen {
     private int health;
     private int money;
     private boolean hasJob;
+    private boolean foodRequestSended;
     private ArrayList<Market> markets;
     private static final ArrayList<Class<? extends company>> COMPANY_TYPES; // = new ArrayList<>();
 
@@ -116,7 +119,8 @@ public class citizen {
     }
 
     public void createCompany(ArrayList<company> companyList){
-        Class<? extends company> companyType = COMPANY_TYPES.get(new Random().nextInt(COMPANY_TYPES.size()));
+        //Class<? extends company> companyType = COMPANY_TYPES.get(new Random().nextInt(COMPANY_TYPES.size()));
+        Class<? extends company> companyType = COMPANY_TYPES.get(ThreadLocalRandom.current().nextInt(COMPANY_TYPES.size()));
 
         // Create a new instance of the selected company type
         try {
@@ -136,11 +140,30 @@ public class citizen {
         this.markets.add(theMarket);
     }
 
-    public void buyFoodOnMarket(){
-        int desiredPrice = new Random().nextInt(35);
-        int desiredQuantity = new Random().nextInt(10);
+
+    public void buyNeedsOnMarket(){
+        if (this.backpack.CheckItemExist("Fish")){
+            this.foodRequestSended = false;
+            return;
+        }
+        if (this.foodRequestSended){
+            return;
+        }
+        BigDecimal minPrice = new BigDecimal(ThreadLocalRandom.current().nextInt(500));
+        int quantityDesired = ThreadLocalRandom.current().nextInt(1, 64);
+        Market targetMarket = null;
         for(Market theMarket : this.markets){
-            theMarket.searchOrder("sell", "Fish");
+            ArrayList<Market.Order> sellingMarket = theMarket.searchOrder("sell", "Fish");
+            for (Market.Order theOrder : sellingMarket){
+                if(minPrice.compareTo(theOrder.price) > 0){
+                    minPrice = theOrder.price;
+                    targetMarket = theMarket;
+                }
+            }
+        }
+        if(targetMarket != null){
+            targetMarket.placeOrder("buy", this,"Fish", quantityDesired, minPrice);
+            this.foodRequestSended = true;
         }
     }
 }
