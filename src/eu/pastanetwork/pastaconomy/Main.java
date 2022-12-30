@@ -9,7 +9,7 @@ public class Main {
         System.out.println("City: " + myCity.GetCityName() + " Population: " + myCity.GetNumberPopulation() + " Compagnies: " + myCity.GetNumberCompanies());
         for(int i=1; i < 365; i++){
             System.out.println("Simulating: Day " + i);
-            myCity.simulateDay();
+            myCity.update();
         }
         myCity.displayMarketOrders();
     }

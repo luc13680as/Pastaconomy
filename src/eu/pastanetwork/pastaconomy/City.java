@@ -45,7 +45,7 @@ public class City {
         this.giveMarketToCompanies(this.cityCompanies, this.cityMarket);
         this.giveMarketToCitizens(this.cityPopulation, this.cityMarket);
     }
-    public void simulateDay(){
+    public void update(){
         for (company theCompany : this.cityCompanies){
             theCompany.buyToolRequirement();
             theCompany.paySalary();
