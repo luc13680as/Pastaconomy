@@ -21,6 +21,7 @@ public abstract class company {
 
     //Variable for subclasses to define
     protected String productionToolRequirement;
+    protected boolean productionToolRequestSended = false;
     protected ArrayList<String> possibleProductionList;
     protected String productionItem;
     protected int lowerProductionPossible;
@@ -145,6 +146,7 @@ public abstract class company {
         if(!companyInventory.CheckItemExist(this.productionToolRequirement)){
             return false;
         }
+        this.productionToolRequestSended = false;
         return true;
     }
 
@@ -168,10 +170,18 @@ public abstract class company {
         productionCostPerUnit = productionCostPerUnit.divide(BigDecimal.valueOf(production), 2, RoundingMode.HALF_EVEN);
 
         //Selling price without any profit
-        BigDecimal sellingPrice = productionCostPerUnit.multiply(BigDecimal.valueOf(production));
+        BigDecimal sellingPrice = productionCostPerUnit;
         this.market.placeOrder("sell", this, this.productionItem, production, sellingPrice);
     }
 
-    public void buyRequirements(){}
+    public void buyToolRequirement(){
+        if(!(this.isRequirementCompleted()) && (!this.productionToolRequestSended)){
+            int numberOrder = this.market.searchOrder("buy", this, this.productionToolRequirement).size();
+            if (numberOrder <= 0) {
+                this.market.placeOrder("buy", this, this.productionToolRequirement, 1, BigDecimal.valueOf(1));
+                this.productionToolRequestSended = true;
+            }
+        }
+    }
 }
 

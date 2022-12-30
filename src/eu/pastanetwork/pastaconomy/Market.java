@@ -72,13 +72,16 @@ public class Market {
         }
     }
 
-    public ArrayList<Order> displayOrders(){
-        return this.orderList.stream().collect(Collectors.toCollection(ArrayList::new));
+    public ArrayList<Order> getPlacedOrder(Object theFrom){
+        this.checkSearchOrderFrom(theFrom);
+        return this.orderList.parallelStream()
+                .filter(order -> order.from.equals(theFrom))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public ArrayList<Order> searchOrder(String typeOfOrder, String theItem){
-        checkSearchOrderTypeOfOrder(typeOfOrder);
-        checkSearchOrderItem(theItem);
+        this.checkSearchOrderTypeOfOrder(typeOfOrder);
+        this.checkSearchOrderItem(theItem);
 
         Predicate<Order> typeOfFilter;
         if(typeOfOrder.equals("buy")){
@@ -92,6 +95,24 @@ public class Market {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    public ArrayList<Order> searchOrder(String typeOfOrder, Object theFrom, String theItem){
+        this.checkSearchOrderTypeOfOrder(typeOfOrder);
+        this.checkSearchOrderItem(theItem);
+        this.checkSearchOrderFrom(theFrom);
+
+        Predicate<Order> typeOfFilter;
+        if(typeOfOrder.equals("buy")){
+            typeOfFilter = o -> o.type.equals(Order.TypeOrder.BUY);
+        } else{
+            typeOfFilter = o -> o.type.equals(Order.TypeOrder.SELL);
+        }
+        return this.orderList.parallelStream()
+                .filter(typeOfFilter)
+                .filter(order -> order.item.equals(theItem))
+                .filter(order -> order.from.equals(theFrom))
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
     private void checkSearchOrderTypeOfOrder(String theTypeofOrder){
         if(!(theTypeofOrder.equals("any")) && !(theTypeofOrder.equals("sell")) && !(theTypeofOrder.equals("buy"))){
             throw new IllegalArgumentException("Wrong type of order");
@@ -101,5 +122,15 @@ public class Market {
         if (!this.itemRegistry.CheckItemExist(theItem)){
             throw new IllegalArgumentException("Item doesn't exist in the item registry");
         }
+    }
+
+    private void checkSearchOrderFrom(Object obj){
+        if (!(obj instanceof company) && !(obj instanceof citizen)){
+            throw new IllegalArgumentException("From doesn't contain a valid object");
+        }
+    }
+
+    public ArrayList<Order> displayOrders(){
+        return this.orderList.stream().collect(Collectors.toCollection(ArrayList::new));
     }
 }

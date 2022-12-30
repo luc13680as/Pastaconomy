@@ -60,7 +60,7 @@ public class Inventory {
         int maximumItemSlotSize = requestItem.getMaxSlotQuantity();
 
         if(this.GetMaxPossibleSpace(itemName) < quantityRemaining){
-            System.out.println("!! WARNING !! - The quantity requested (" + quantityRequested + ") go beyond the maximum remaining space (" + this.GetMaxPossibleSpace(itemName) + ") !");
+            //System.out.println("!! WARNING !! - The quantity requested (" + quantityRequested + ") go beyond the maximum remaining space (" + this.GetMaxPossibleSpace(itemName) + ") !");
         }
 
         for (Slot slot : this.inventorySlots){

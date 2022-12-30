@@ -37,6 +37,7 @@ public class City {
         for(int i=0; i < numberOfCitizen; i++){
             cityPopulation.add(new citizen());
         }
+        System.out.println("Init completed");
         this.cityName = nameofcity;
         this.findWorkForCitizen();
         this.giveMarketToCompanies(this.cityCompanies, this.cityMarket);
@@ -46,7 +47,7 @@ public class City {
         this.findWorkForCitizen();
 
         for (company theCompany : this.cityCompanies){
-            theCompany.buyRequirements();
+            theCompany.buyToolRequirement();
             theCompany.paySalary();
             int productionOfCompany = theCompany.produce();
             theCompany.sellProduction(productionOfCompany);
@@ -70,13 +71,16 @@ public class City {
 
     //Methods related to citizens
     private void findWorkForCitizen(){
+        int i = 0;
         for (citizen oneCitizen : cityPopulation){
+            System.out.println(i);
             if (!oneCitizen.checkHasJob()) {
                 boolean state = oneCitizen.searchWork(this.cityCompanies);
                 if (!state){
                     oneCitizen.createCompany(this.cityCompanies);
                 }
             }
+            i++;
         }
     }
 
