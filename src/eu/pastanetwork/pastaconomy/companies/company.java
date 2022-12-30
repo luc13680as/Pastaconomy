@@ -4,6 +4,8 @@ import eu.pastanetwork.pastaconomy.Inventory;
 import eu.pastanetwork.pastaconomy.Market;
 import eu.pastanetwork.pastaconomy.citizen;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -14,7 +16,7 @@ public abstract class company {
     protected Inventory companyInventory;
     protected int maxEmployees;
     protected float recruitingChances;
-    protected int money;
+    protected BigDecimal money;
     protected Market market;
 
     //Variable for subclasses to define
@@ -28,35 +30,35 @@ public abstract class company {
     protected int fixedCostOfProduction;
 
     public company(citizen thecreator){
-        this(thecreator,"Unknown");
+        this(thecreator,"Unknown", 1000);
     }
 
-    public company(citizen creator, String nameofcompany){
+    public company(citizen creator, String nameofcompany, int money){
         this.employees = new ArrayList<citizen>();
         this.companyName = nameofcompany;
         this.companyInventory = new Inventory();
         this.employees.add(creator);
         this.maxEmployees = 5;
-        this.money = 1000;
+        this.money = new BigDecimal(money).setScale(2, RoundingMode.HALF_EVEN);
     }
     public void setName(String companyNameProvided){
         this.companyName = companyNameProvided;
     }
     public String getName() { return this.companyName; }
 
-    public void ReceiveMoney(int moneyReceived){
-        if (moneyReceived > 0){
-            this.money += moneyReceived;
+    public void ReceiveMoney(BigDecimal moneyReceived){
+        if (moneyReceived.compareTo(new BigDecimal(0)) > 0){
+            this.money.add(moneyReceived);
         }
     }
-    public boolean SpendMoney(int moneyToSpend){
-        if (moneyToSpend > this.money){
+    public boolean SpendMoney(BigDecimal moneyToSpend){
+        if (moneyToSpend.compareTo(this.money) > 0){
             return false;
         }
-        this.money -= moneyToSpend;
+        this.money.subtract(moneyToSpend);
         return true;
     }
-    public int GetMoney(){
+    public BigDecimal GetMoney(){
         return this.money;
     }
 
@@ -125,7 +127,7 @@ public abstract class company {
 
     public void paySalary(){
         int totalToPay = this.getSalaryCost();
-        this.money -= totalToPay;
+        this.SpendMoney(BigDecimal.valueOf(totalToPay));
         for (citizen theemployee: this.employees){
             theemployee.ReceiveMoney(this.baseSalary);
         }
@@ -153,10 +155,11 @@ public abstract class company {
     }
 
     public void sellProduction(int production){
-        //int productionCostPerUnit = (int)Math.round((this.getSalaryCost() + this.fixedCostOfProduction) / production);
-        float productionCostPerUnit = (this.getSalaryCost() + this.fixedCostOfProduction) / production;
-        //if(productionCostPerUnit == 0) { productionCostPerUnit = 1;}
-        float sellingPrice = productionCostPerUnit * production;
+        BigDecimal productionCostPerUnit = new BigDecimal((this.getSalaryCost() + this.fixedCostOfProduction)).setScale(2, RoundingMode.HALF_EVEN);
+        productionCostPerUnit.divide(BigDecimal.valueOf(production));
+
+        //Selling price without any profit
+        BigDecimal sellingPrice = productionCostPerUnit.multiply(BigDecimal.valueOf(production));
         this.market.placeOrder("sell", this, this.productionItem, production, sellingPrice);
     }
 
