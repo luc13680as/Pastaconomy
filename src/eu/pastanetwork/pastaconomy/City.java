@@ -4,6 +4,8 @@ import com.sun.jdi.Value;
 import eu.pastanetwork.pastaconomy.companies.*;
 
 import java.math.RoundingMode;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -44,8 +46,6 @@ public class City {
         this.giveMarketToCitizens(this.cityPopulation, this.cityMarket);
     }
     public void simulateDay(){
-        this.findWorkForCitizen();
-
         for (company theCompany : this.cityCompanies){
             theCompany.buyToolRequirement();
             theCompany.paySalary();
@@ -71,18 +71,16 @@ public class City {
 
     //Methods related to citizens
     private void findWorkForCitizen(){
-        int i = 0;
         for (citizen oneCitizen : cityPopulation){
-            System.out.println(i);
             if (!oneCitizen.checkHasJob()) {
                 boolean state = oneCitizen.searchWork(this.cityCompanies);
                 if (!state){
                     oneCitizen.createCompany(this.cityCompanies);
                 }
             }
-            i++;
         }
     }
+    //Methods related to companies
 
     //Methods related to Market
     private void giveMarketToCompanies(ArrayList<company> target, Market selectedMarket){

@@ -39,7 +39,7 @@ public abstract class company {
         this.companyName = nameofcompany;
         this.companyInventory = new Inventory();
         this.employees.add(creator);
-        this.maxEmployees = 5;
+        this.maxEmployees = 30;
         this.money = new BigDecimal(money).setScale(2, RoundingMode.HALF_EVEN);
     }
     public void setName(String companyNameProvided){
@@ -76,7 +76,7 @@ public abstract class company {
         int high = 101;
         int result = r.nextInt(high-low) + low;
 
-        if ((this.employees.size()+1 > maxEmployees) || (result < 30)) {
+        if (!(this.isRecruiting()) || (result < 30)) {
             return false;
         }
         else{

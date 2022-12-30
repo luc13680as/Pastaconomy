@@ -94,7 +94,15 @@ public class citizen {
         if (this.hasJob){
             return true;
         }
-        for(int i = 0; i < companyList.size(); i++){
+        for(company targetCompany : companyList){
+            boolean companyResponse = targetCompany.recruitEmployees(this);
+            if (companyResponse){
+                hasJob = true;
+                return true;
+            }
+
+        }
+        /*for(int i = 0; i < companyList.size(); i++){
             boolean companyResponse = companyList.get(i).isRecruiting();
             if (companyResponse){
                 boolean companyStatus = companyList.get(i).recruitEmployees(this);
@@ -103,7 +111,7 @@ public class citizen {
                     return true;
                 }
             }
-        }
+        }*/
         return false;
     }
 
@@ -115,7 +123,6 @@ public class citizen {
             companyList.add(companyType.getDeclaredConstructor(citizen.class).newInstance(this));
             this.hasJob = true;
         } catch (ReflectiveOperationException e) {
-            // Handle exception
             companyList.add(new AgricultureCompany(this));
             this.hasJob = true;
         }
@@ -127,5 +134,13 @@ public class citizen {
 
     public void addMarket(Market theMarket){
         this.markets.add(theMarket);
+    }
+
+    public void buyFoodOnMarket(){
+        int desiredPrice = new Random().nextInt(35);
+        int desiredQuantity = new Random().nextInt(10);
+        for(Market theMarket : this.markets){
+            theMarket.searchOrder("sell", "Fish");
+        }
     }
 }
