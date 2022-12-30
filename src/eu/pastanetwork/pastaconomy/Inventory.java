@@ -41,7 +41,7 @@ public class Inventory {
         return itemRequested;
     }
 
-    private int GetMaxPossibleSpace(String itemStringName){
+    public int GetMaxPossibleSpace(String itemStringName){
         Item itemName = ConvertStringToItem(itemStringName);
         int maxPossibleSpace = this.GetEmptySlots() * itemName.getMaxSlotQuantity();
 

@@ -3,15 +3,17 @@ package eu.pastanetwork.pastaconomy;
 import com.sun.jdi.Value;
 import eu.pastanetwork.pastaconomy.companies.*;
 
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Timer;
 
 public class City {
-    String cityName;
-    ArrayList<citizen> cityPopulation;
-    ArrayList<company> cityCompanies;
-    Market cityMarket;
+    private String cityName;
+    private ArrayList<citizen> cityPopulation;
+    private ArrayList<company> cityCompanies;
+    private Market cityMarket;
 
     //Default constructors with defaults values
     public City(){
@@ -36,18 +38,18 @@ public class City {
             cityPopulation.add(new citizen());
         }
         this.cityName = nameofcity;
-        this.InitPopulation();
-
+        this.findWorkForCitizen();
         this.giveMarketToCompanies(this.cityCompanies, this.cityMarket);
         this.giveMarketToCitizens(this.cityPopulation, this.cityMarket);
+    }
+    public void simulateDay(){
+        this.findWorkForCitizen();
 
-        for (company workingCompany : this.cityCompanies){
-            workingCompany.produce();
-        }
-        int i=0;
-        for (Market.Order o : this.cityMarket.displayOrders()){
-            System.out.println("[" + i + "] " + o.type + " - " + o.item + " - " + o.amount + " - " + o.price + "€");
-            i++;
+        for (company theCompany : this.cityCompanies){
+            theCompany.buyRequirements();
+            theCompany.paySalary();
+            int productionOfCompany = theCompany.produce();
+            theCompany.sellProduction(productionOfCompany);
         }
     }
 
@@ -60,33 +62,23 @@ public class City {
     public String GetCityName(){
         return this.cityName;
     }
-    //public boolean setCityName(String nameofcitytoset){}
 
     public int GetNumberCompanies(){
         return cityCompanies.size();
     }
-    //public boolean SetNumberCompanies(String state, int number){}
 
 
     //Methods related to citizens
-    private void InitPopulation(){
+    private void findWorkForCitizen(){
         for (citizen oneCitizen : cityPopulation){
-            boolean state = oneCitizen.searchWork(this.cityCompanies);
-            if (!state){
-                oneCitizen.createCompany(this.cityCompanies);
+            if (!oneCitizen.checkHasJob()) {
+                boolean state = oneCitizen.searchWork(this.cityCompanies);
+                if (!state){
+                    oneCitizen.createCompany(this.cityCompanies);
+                }
             }
         }
     }
-    /*public void AddCitizenToCity(citizen thechosenone){}
-    public void RemoveCitizenFromCity(citizen thenotchosenone){}
-    public void GetCitizen(int indexOfCitizen){}
-    public void GetCitizenIndex(citizen citizenToGetIndexFrom){}*/
-
-    //Methods related to Companies
-    /*public void AddCompanyToCity(company thechosencompany){}
-    public void RemoveCompanyFromCity(company thenotchosencompany){}
-    public void GetCompany(int indexOfCompany){}
-    public void GetCompanyIndex(company companyToGetIndexFrom){}*/
 
     //Methods related to Market
     private void giveMarketToCompanies(ArrayList<company> target, Market selectedMarket){
@@ -98,6 +90,14 @@ public class City {
     private void giveMarketToCitizens(ArrayList<citizen> target, Market selectedMarket){
         for (citizen theCitizen : target){
             theCitizen.addMarket(selectedMarket);
+        }
+    }
+
+    public void displayMarketOrders(){
+        int i=0;
+        for (Market.Order o : this.cityMarket.displayOrders()){
+            System.out.println("[" + i + "] " + o.type + " - " + o.item + " - " + o.amount + " - " + o.price.stripTrailingZeros().toPlainString() + "€");
+            i++;
         }
     }
 

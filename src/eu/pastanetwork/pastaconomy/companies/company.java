@@ -107,18 +107,23 @@ public abstract class company {
         return r.nextInt(this.upperProductionPossible-this.lowerProductionPossible) + this.lowerProductionPossible;
     }
 
-    public void produce(){
+    public int produce(){
         int productionQuantity = getProductionAmount();
         if(!isRequirementCompleted()){
             productionQuantity = (int)Math.round(productionQuantity * this.efficiencyWithoutRequirement);
         }
         productionQuantity = productionQuantity * employees.size();
-        this.companyInventory.AddItemToInventory(productionItem, productionQuantity);
-        //this.companyInventory.Display();
-        if (productionQuantity > 0){
-            sellProduction(productionQuantity);
+
+        try {
+            this.companyInventory.AddItemToInventory(productionItem, productionQuantity);
+        } catch (Exception IllegalArgumentException){
+            int maximumAllowed = this.companyInventory.GetMaxPossibleSpace(productionItem);
+            if (maximumAllowed < productionQuantity){
+                productionQuantity = maximumAllowed;
+                this.companyInventory.AddItemToInventory(productionItem, productionQuantity);
+            }
         }
-        //return productionQuantity;
+        return productionQuantity;
     }
 
     public int getSalaryCost(){
@@ -155,8 +160,12 @@ public abstract class company {
     }
 
     public void sellProduction(int production){
-        BigDecimal productionCostPerUnit = new BigDecimal((this.getSalaryCost() + this.fixedCostOfProduction)).setScale(2, RoundingMode.HALF_EVEN);
-        productionCostPerUnit.divide(BigDecimal.valueOf(production));
+        if (production <= 0){
+            return;
+        }
+        int totalCost = this.getSalaryCost() + this.fixedCostOfProduction;
+        BigDecimal productionCostPerUnit = new BigDecimal(totalCost);
+        productionCostPerUnit = productionCostPerUnit.divide(BigDecimal.valueOf(production), 2, RoundingMode.HALF_EVEN);
 
         //Selling price without any profit
         BigDecimal sellingPrice = productionCostPerUnit.multiply(BigDecimal.valueOf(production));
