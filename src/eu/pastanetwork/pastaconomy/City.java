@@ -54,6 +54,7 @@ public class City {
         for (citizen theCitizen : this.cityPopulation){
             theCitizen.buyNeedsOnMarket();
         }
+        cityMarket.indexOrdersPerOrder();
     }
 
     //Methods related to the city

@@ -5,9 +5,7 @@ import eu.pastanetwork.pastaconomy.companies.company;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -133,5 +131,51 @@ public class Market {
 
     public ArrayList<Order> displayOrders(){
         return this.orderList.stream().collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public void indexOrdersPerOrder(){
+        HashMap<String, LinkedHashMap<Integer, BigDecimal>> sellOrderIndex;
+        LinkedHashMap<Integer, BigDecimal> sortedOrdersForItem = new LinkedHashMap<>();
+        HashMap<Integer, BigDecimal> currentOrdersForItem = new HashMap<>();
+        ArrayList<BigDecimal> tempList = new ArrayList<>();
+
+        //Temp array construction
+        for(Order theOrder : this.orderList){
+            if((theOrder.type.equals(Order.TypeOrder.BUY)) && (theOrder.item.equals("Fish"))){
+                currentOrdersForItem.put(this.orderList.indexOf(theOrder), theOrder.price);
+                //this.orderList.indexOf(theOrder)
+                //tempList.add(theOrder.price);
+            }
+        }
+        for (Map.Entry<Integer, BigDecimal> entry : currentOrdersForItem.entrySet()){
+            tempList.add(entry.getValue());
+        }
+        Collections.sort(tempList);
+        for (BigDecimal num : tempList){
+            for (Map.Entry<Integer, BigDecimal> entry : currentOrdersForItem.entrySet()){
+                if(entry.getValue().equals(num)){
+                    sortedOrdersForItem.put(entry.getKey(), num);
+                }
+            }
+        }
+        System.out.println(sortedOrdersForItem);
+    }
+
+    public void matchOrders(){
+        for (Order buyingOrder : this.orderList){
+            if (buyingOrder.type.equals(Order.TypeOrder.SELL)){
+                continue;
+            }
+            for (Order sellingOrder : this.orderList){
+                if (sellingOrder.type.equals(Order.TypeOrder.BUY)){
+                    continue;
+                }
+
+            }
+        }
+    }
+
+    private void executeOrder(Order sellOrder, Order buyOrder){
+
     }
 }
