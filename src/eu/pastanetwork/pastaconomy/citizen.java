@@ -105,16 +105,6 @@ public class citizen {
             }
 
         }
-        /*for(int i = 0; i < companyList.size(); i++){
-            boolean companyResponse = companyList.get(i).isRecruiting();
-            if (companyResponse){
-                boolean companyStatus = companyList.get(i).recruitEmployees(this);
-                if (companyStatus){
-                    hasJob = true;
-                    return true;
-                }
-            }
-        }*/
         return false;
     }
 
