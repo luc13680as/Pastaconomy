@@ -139,10 +139,11 @@ public class citizen {
         if (this.foodRequestSended){
             return;
         }
-        BigDecimal minPrice = new BigDecimal(ThreadLocalRandom.current().nextInt(500));
+        BigDecimal minPrice = new BigDecimal(1+ThreadLocalRandom.current().nextInt(500));
         int quantityDesired = ThreadLocalRandom.current().nextInt(1, 64);
-        Market targetMarket = null;
-        for(Market theMarket : this.markets){
+        //Market targetMarket = null;
+        Market targetMarket = this.markets.get(0);
+        /*for(Market theMarket : this.markets){
             ArrayList<Market.Order> sellingMarket = theMarket.searchOrder("sell", "Fish");
             for (Market.Order theOrder : sellingMarket){
                 if(minPrice.compareTo(theOrder.price) > 0){
@@ -150,7 +151,7 @@ public class citizen {
                     targetMarket = theMarket;
                 }
             }
-        }
+        }*/
         if(targetMarket != null){
             targetMarket.placeOrder("buy", this,"Fish", quantityDesired, minPrice);
             this.foodRequestSended = true;

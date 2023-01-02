@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="Pasta-Economy-stage1:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Pasta_Economy_stage1_jar</output-path>
+    <root id="archive" name="Pasta-Economy-stage1.jar">
+      <element id="module-output" name="Pasta-Economy-stage1" />
+    </root>
+  </artifact>
+</component>
