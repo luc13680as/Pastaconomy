@@ -29,7 +29,7 @@ public class City {
 
     //Main constructor
     public City(String nameofcity,int numberOfCitizen){
-        this.cityPopulation = new ArrayList<citizen>();
+        this.cityPopulation = new ArrayList<citizen>(numberOfCitizen);
         this.cityCompanies = new ArrayList<company>();
         this.cityMarket = new Market(this);
         if(numberOfCitizen <= 1){
@@ -54,7 +54,7 @@ public class City {
         for (citizen theCitizen : this.cityPopulation){
             theCitizen.buyNeedsOnMarket();
         }
-        cityMarket.indexOrdersPerOrder();
+        cityMarket.matchOrders();
     }
 
     //Methods related to the city
@@ -74,7 +74,9 @@ public class City {
 
     //Methods related to citizens
     private void findWorkForCitizen(){
+        int i = 0;
         for (citizen oneCitizen : cityPopulation){
+            System.out.println(i++);
             if (!oneCitizen.checkHasJob()) {
                 boolean state = oneCitizen.searchWork(this.cityCompanies);
                 if (!state){

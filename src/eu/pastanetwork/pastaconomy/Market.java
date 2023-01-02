@@ -4,17 +4,16 @@ import eu.pastanetwork.pastaconomy.companies.company;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Market {
-    private static final DecimalFormat df = new DecimalFormat("0.00");
     ArrayList<Order> orderList;
     City cityOfMarket;
     ItemRegistry itemRegistry;
+
     public static class Order{
         public enum TypeOrder{
             SELL, BUY
@@ -26,7 +25,14 @@ public class Market {
         public int amount;
         public BigDecimal price;
 
+        public BigDecimal getPrice(){
+            return this.price;
+        }
+        public String getItem(){
+            return this.item;
+        }
     }
+
     public Market(City theCity){
         this.cityOfMarket = theCity;
         this.orderList = new ArrayList<>();
@@ -134,48 +140,59 @@ public class Market {
     }
 
     public void indexOrdersPerOrder(){
-        HashMap<String, LinkedHashMap<Integer, BigDecimal>> sellOrderIndex;
-        LinkedHashMap<Integer, BigDecimal> sortedOrdersForItem = new LinkedHashMap<>();
-        HashMap<Integer, BigDecimal> currentOrdersForItem = new HashMap<>();
-        ArrayList<BigDecimal> tempList = new ArrayList<>();
+        Comparator<Order> comparatorPerPrice = Comparator.comparing(Order -> Order.price);
+        List <BigDecimal> theSorted = this.orderList.parallelStream()
+                .filter(o -> o.type.equals(Order.TypeOrder.BUY))
+                .filter(order -> order.item.equals("Fish"))
+                .sorted(comparatorPerPrice.reversed())
+                .map(Order::getPrice)
+                .collect(Collectors.toList());
 
-        //Temp array construction
-        for(Order theOrder : this.orderList){
-            if((theOrder.type.equals(Order.TypeOrder.BUY)) && (theOrder.item.equals("Fish"))){
-                currentOrdersForItem.put(this.orderList.indexOf(theOrder), theOrder.price);
-                //this.orderList.indexOf(theOrder)
-                //tempList.add(theOrder.price);
-            }
-        }
-        for (Map.Entry<Integer, BigDecimal> entry : currentOrdersForItem.entrySet()){
-            tempList.add(entry.getValue());
-        }
-        Collections.sort(tempList);
-        for (BigDecimal num : tempList){
-            for (Map.Entry<Integer, BigDecimal> entry : currentOrdersForItem.entrySet()){
-                if(entry.getValue().equals(num)){
-                    sortedOrdersForItem.put(entry.getKey(), num);
-                }
-            }
-        }
-        System.out.println(sortedOrdersForItem);
+        System.out.println(theSorted);
     }
 
     public void matchOrders(){
-        for (Order buyingOrder : this.orderList){
-            if (buyingOrder.type.equals(Order.TypeOrder.SELL)){
+        ArrayList<Order> tempOrderList = this.orderList;
+
+        Set<String> itemTypes = tempOrderList.parallelStream()
+                .map(Order::getItem)
+                .collect(Collectors.toSet());
+
+        Comparator<Order> comparatorPerPrice = Comparator.comparing(Order -> Order.price);
+        for(String theItem : itemTypes){
+            List<Order> buyOrders = tempOrderList.parallelStream()
+                    .filter(o -> o.type.equals(Order.TypeOrder.BUY))
+                    .filter(o -> o.item.equals(theItem))
+                    .sorted(comparatorPerPrice.reversed())
+                    .collect(Collectors.toList());
+
+            List<Order> sellOrders = tempOrderList.parallelStream()
+                    .filter(o -> o.type.equals(Order.TypeOrder.SELL))
+                    .filter(o -> o.item.equals(theItem))
+                    .sorted(comparatorPerPrice)
+                    .collect(Collectors.toList());
+
+            if((sellOrders.size() == 0) || (buyOrders.size() == 0)){
                 continue;
             }
-            for (Order sellingOrder : this.orderList){
-                if (sellingOrder.type.equals(Order.TypeOrder.BUY)){
-                    continue;
-                }
 
+            loopThroughOrders(buyOrders, sellOrders);
+        }
+    }
+
+    private void loopThroughOrders(List<Order> providedBuyOrders, List<Order> providedSellOrders){
+        for(Order theBuyOrder : providedBuyOrders){
+            for (Order theSellOrder : providedSellOrders){
+                if (theBuyOrder.price.compareTo(theSellOrder.price) >= 0){
+                    executeOrder(theBuyOrder, theSellOrder);
+                } else {
+                    return;
+                }
             }
         }
     }
 
-    private void executeOrder(Order sellOrder, Order buyOrder){
-
+    private void executeOrder(Order buyOrder, Order sellOrder){
+        return;
     }
 }
