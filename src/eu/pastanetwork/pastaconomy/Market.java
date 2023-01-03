@@ -1,5 +1,7 @@
 package eu.pastanetwork.pastaconomy;
 
+import eu.pastanetwork.pastaconomy.companies.AgricultureCompany;
+import eu.pastanetwork.pastaconomy.companies.MiningCompany;
 import eu.pastanetwork.pastaconomy.companies.company;
 
 import java.math.BigDecimal;
@@ -175,7 +177,6 @@ public class Market {
             if((sellOrders.size() == 0) || (buyOrders.size() == 0)){
                 continue;
             }
-
             loopThroughOrders(buyOrders, sellOrders);
         }
     }
@@ -193,6 +194,30 @@ public class Market {
     }
 
     private void executeOrder(Order buyOrder, Order sellOrder){
+        if (!(buyOrder.price.compareTo(sellOrder.price) >= 0)) {
+            //Debug
+            System.out.println("Not matching price detected");
+            return;
+        }
+        if (!(buyOrder.type.equals(Order.TypeOrder.BUY)) || !(sellOrder.type.equals(Order.TypeOrder.SELL))){
+            throw new IllegalArgumentException("Wrong type of order provided");
+        }
+
+        buyOrder.to = sellOrder.from;
+        sellOrder.to = buyOrder.from;
+        if(buyOrder.amount >= sellOrder.amount){
+            int amountExecuted = sellOrder.amount;
+            int remaining = buyOrder.amount - amountExecuted;
+        } else {
+            int amountExecuted = buyOrder.amount;
+            int remaining = sellOrder.amount - amountExecuted;
+        }
+
+        if (buyOrder.from instanceof citizen){
+            (citizen)buyOrder.from.
+        } else {
+        }
+
         return;
     }
 }
