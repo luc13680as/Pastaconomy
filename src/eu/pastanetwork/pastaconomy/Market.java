@@ -208,14 +208,12 @@ public class Market {
         if(buyOrder.amount >= sellOrder.amount){
             int amountExecuted = sellOrder.amount;
             int remaining = buyOrder.amount - amountExecuted;
+            //this.removeorder(sellOrder);
+            //this.removeorder(buyOrder);
+            //this.addOrder(buyOrdermodified);
         } else {
             int amountExecuted = buyOrder.amount;
             int remaining = sellOrder.amount - amountExecuted;
-        }
-
-        if (buyOrder.from instanceof citizen){
-            (citizen)buyOrder.from.
-        } else {
         }
 
         return;
