@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class citizen {
+public class citizen implements IOrderPlacer{
     private String name;
     private String lastName;
     private Inventory backpack;
@@ -126,9 +126,42 @@ public class citizen {
         this.hasJob = false;
     }
 
+    @Override
     public void addMarket(Market theMarket){
         this.markets.add(theMarket);
     }
+    @Override
+    public boolean hasMarket(){
+        return this.markets.size() > 0;
+    }
+     boolean checkOrder(Market.Order theOrder, int quantity){
+        if (!(theOrder.from.equals(this))) {
+            return false;
+        }
+        if ((theOrder.type.equals(Market.Order.TypeOrder.SELL))){
+            if (!(this.backpack.CheckItemExist(theOrder.item))){
+                return false;
+            } else {
+                if(this.backpack.GetItemQuantity(theOrder.item) < theOrder.amount){
+                    return false;
+                }
+            }
+            return false;
+        } else {
+            BigDecimal priceToPay = theOrder.price.multiply(new BigDecimal(quantity));
+            //if(priceToPay.compareTo(this.money)){
+
+            //}
+        }
+        return true;
+    }
+    @Override
+    public boolean processOrder(Market.Order theOrder, int quantity){
+        if (checkOrder(theOrder, quantity)){
+            return false;
+        }
+    }
+
 
 
     public void buyNeedsOnMarket(){
