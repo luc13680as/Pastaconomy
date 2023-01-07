@@ -138,7 +138,7 @@ public class citizen implements IOrderPlacer, IMoney{
     public boolean hasMarket(){
         return this.markets.size() > 0;
     }
-     boolean checkOrder(Market.Order theOrder, int quantity){
+    private boolean checkOrder(Market.Order theOrder, int quantity){
         if (!(theOrder.from.equals(this))) {
             return false;
         }
@@ -159,11 +159,17 @@ public class citizen implements IOrderPlacer, IMoney{
         if (checkOrder(theOrder, quantity)){
             return false;
         }
-
+        if(theOrder.type.equals(Market.Order.TypeOrder.SELL)){
+            this.backpack.RemoveItemFromInventory(theOrder.item, quantity);
+            BigDecimal priceToGet = theOrder.price.multiply(BigDecimal.valueOf(quantity));
+            this.ReceiveMoney(priceToGet);
+        } else {
+            BigDecimal priceToPay = theOrder.price.multiply(BigDecimal.valueOf(quantity));
+            this.SpendMoney(priceToPay);
+            this.backpack.AddItemToInventory(theOrder.item, quantity);
+        }
         return true;
     }
-
-
 
     public void buyNeedsOnMarket(){
         if (this.backpack.CheckItemExist("Fish")){
