@@ -138,7 +138,8 @@ public class citizen implements IOrderPlacer, IMoney{
     public boolean hasMarket(){
         return this.markets.size() > 0;
     }
-    private boolean checkOrder(Market.Order theOrder, int quantity){
+    @Override
+    public boolean checkOrder(Market.Order theOrder, int quantity){
         if (!(theOrder.from.equals(this))) {
             return false;
         }
@@ -155,16 +156,16 @@ public class citizen implements IOrderPlacer, IMoney{
         return true;
     }
     @Override
-    public boolean processOrder(Market.Order theOrder, int quantity){
+    public boolean processOrder(Market.Order theOrder, int quantity, BigDecimal price){
         if (checkOrder(theOrder, quantity)){
             return false;
         }
         if(theOrder.type.equals(Market.Order.TypeOrder.SELL)){
             this.backpack.RemoveItemFromInventory(theOrder.item, quantity);
-            BigDecimal priceToGet = theOrder.price.multiply(BigDecimal.valueOf(quantity));
+            BigDecimal priceToGet = price.multiply(BigDecimal.valueOf(quantity));
             this.ReceiveMoney(priceToGet);
         } else {
-            BigDecimal priceToPay = theOrder.price.multiply(BigDecimal.valueOf(quantity));
+            BigDecimal priceToPay = price.multiply(BigDecimal.valueOf(quantity));
             this.SpendMoney(priceToPay);
             this.backpack.AddItemToInventory(theOrder.item, quantity);
         }
@@ -180,7 +181,7 @@ public class citizen implements IOrderPlacer, IMoney{
             return;
         }
         BigDecimal minPrice = new BigDecimal(1+ThreadLocalRandom.current().nextInt(500));
-        int quantityDesired = ThreadLocalRandom.current().nextInt(1, 64);
+        int quantityDesired = ThreadLocalRandom.current().nextInt(1, 8);
         //Market targetMarket = null;
         Market targetMarket = this.markets.get(0);
         /*for(Market theMarket : this.markets){
