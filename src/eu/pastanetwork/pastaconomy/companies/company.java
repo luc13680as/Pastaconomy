@@ -167,7 +167,8 @@ public abstract class company implements IMoney, IOrderPlacer {
         }
         return true;
     }
-    private boolean checkOrder(Market.Order theOrder, int quantity){
+    @Override
+    public boolean checkOrder(Market.Order theOrder, int quantity){
         if (!(theOrder.from.equals(this))) {
             return false;
         }
@@ -184,16 +185,16 @@ public abstract class company implements IMoney, IOrderPlacer {
         return true;
     }
     @Override
-    public boolean processOrder(Market.Order theOrder, int quantity){
+    public boolean processOrder(Market.Order theOrder, int quantity, BigDecimal price){
         if (checkOrder(theOrder, quantity)){
             return false;
         }
         if(theOrder.type.equals(Market.Order.TypeOrder.SELL)){
             this.companyInventory.RemoveItemFromInventory(theOrder.item, quantity);
-            BigDecimal priceToGet = theOrder.price.multiply(BigDecimal.valueOf(quantity));
+            BigDecimal priceToGet = price.multiply(BigDecimal.valueOf(quantity));
             this.ReceiveMoney(priceToGet);
         } else {
-            BigDecimal priceToPay = theOrder.price.multiply(BigDecimal.valueOf(quantity));
+            BigDecimal priceToPay = price.multiply(BigDecimal.valueOf(quantity));
             this.SpendMoney(priceToPay);
             this.companyInventory.AddItemToInventory(theOrder.item, quantity);
         }
