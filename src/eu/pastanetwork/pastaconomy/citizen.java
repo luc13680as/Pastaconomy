@@ -143,19 +143,14 @@ public class citizen implements IOrderPlacer, IMoney{
             return false;
         }
         if ((theOrder.type.equals(Market.Order.TypeOrder.SELL))){
-            if (!(this.backpack.CheckItemExist(theOrder.item))){
+            if (!(this.backpack.CheckItemExist(theOrder.item)) || (this.backpack.GetItemQuantity(theOrder.item) < theOrder.amount)){
                 return false;
-            } else {
-                if(this.backpack.GetItemQuantity(theOrder.item) < theOrder.amount){
-                    return false;
-                }
             }
-            return false;
         } else {
             BigDecimal priceToPay = theOrder.price.multiply(new BigDecimal(quantity));
-            //if(priceToPay.compareTo(this.money)){
-
-            //}
+            if((priceToPay.compareTo(this.money) >= 0) || (this.backpack.GetMaxPossibleSpace(theOrder.item) < quantity)){
+                return false;
+            }
         }
         return true;
     }
@@ -164,6 +159,8 @@ public class citizen implements IOrderPlacer, IMoney{
         if (checkOrder(theOrder, quantity)){
             return false;
         }
+
+        return true;
     }
 
 
