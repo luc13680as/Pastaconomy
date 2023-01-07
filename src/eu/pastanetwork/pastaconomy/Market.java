@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 
 public class Market {
     ArrayList<Order> orderList;
+    ArrayList<Order> ordersToRemove;
     City cityOfMarket;
     ItemRegistry itemRegistry;
 
@@ -21,8 +22,8 @@ public class Market {
             SELL, BUY
         }
         public TypeOrder type;
-        public Object from;
-        public Object to;
+        public IOrderPlacer from;
+        public IOrderPlacer to;
         public String item;
         public int amount;
         public BigDecimal price;
@@ -38,10 +39,11 @@ public class Market {
     public Market(City theCity){
         this.cityOfMarket = theCity;
         this.orderList = new ArrayList<>();
+        this.ordersToRemove = new ArrayList<>();
         this.itemRegistry = ItemRegistry.getInstance();
     }
 
-    public boolean placeOrder(String theTypeofOrder, Object theFrom, String theItem, int theAmount, BigDecimal thePrice){
+    public boolean placeOrder(String theTypeofOrder, IOrderPlacer theFrom, String theItem, int theAmount, BigDecimal thePrice){
         checkPlaceOrder(theTypeofOrder, theFrom, theItem, theAmount, thePrice);
         Order createdOrder = new Order();
         createdOrder.from = theFrom;
@@ -58,7 +60,7 @@ public class Market {
         return true;
     }
 
-    private void checkPlaceOrder(String theTypeofOrder, Object theFrom, String theItem, int theAmount, BigDecimal thePrice){
+    private void checkPlaceOrder(String theTypeofOrder, IOrderPlacer theFrom, String theItem, int theAmount, BigDecimal thePrice){
         if (!theTypeofOrder.equals("sell") && !theTypeofOrder.equals("buy")){
             throw new IllegalArgumentException("Wrong type of order");
         }
@@ -79,7 +81,7 @@ public class Market {
         }
     }
 
-    public ArrayList<Order> getPlacedOrder(Object theFrom){
+    public ArrayList<Order> getPlacedOrder(IOrderPlacer theFrom){
         this.checkSearchOrderFrom(theFrom);
         return this.orderList.parallelStream()
                 .filter(order -> order.from.equals(theFrom))
@@ -102,7 +104,7 @@ public class Market {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public ArrayList<Order> searchOrder(String typeOfOrder, Object theFrom, String theItem){
+    public ArrayList<Order> searchOrder(String typeOfOrder, IOrderPlacer theFrom, String theItem){
         this.checkSearchOrderTypeOfOrder(typeOfOrder);
         this.checkSearchOrderItem(theItem);
         this.checkSearchOrderFrom(theFrom);
@@ -131,7 +133,7 @@ public class Market {
         }
     }
 
-    private void checkSearchOrderFrom(Object obj){
+    private void checkSearchOrderFrom(IOrderPlacer obj){
         if (!(obj instanceof company) && !(obj instanceof citizen)){
             throw new IllegalArgumentException("From doesn't contain a valid object");
         }
@@ -178,44 +180,56 @@ public class Market {
                 continue;
             }
             loopThroughOrders(buyOrders, sellOrders);
+            deleteOrders();
         }
     }
 
     private void loopThroughOrders(List<Order> providedBuyOrders, List<Order> providedSellOrders){
         for(Order theBuyOrder : providedBuyOrders){
             for (Order theSellOrder : providedSellOrders){
-                if (theBuyOrder.price.compareTo(theSellOrder.price) >= 0){
+                if ((theBuyOrder.price.compareTo(theSellOrder.price) >= 0) && (theSellOrder.to == null) && (theBuyOrder.to == null)){
                     executeOrder(theBuyOrder, theSellOrder);
                 } else {
-                    return;
+                    continue;
                 }
             }
         }
     }
 
     private void executeOrder(Order buyOrder, Order sellOrder){
-        if (!(buyOrder.price.compareTo(sellOrder.price) >= 0)) {
+        /*if (!(buyOrder.price.compareTo(sellOrder.price) >= 0)) {
             //Debug
             System.out.println("Not matching price detected");
             return;
+        }*/
+        int amountExecuted = 0;
+        int remainingToBuy = -1;
+        int remainingToSell = -1;
+        if(buyOrder.amount > sellOrder.amount){
+            amountExecuted = sellOrder.amount;
+            remainingToBuy = buyOrder.amount - amountExecuted;
+        } else if (buyOrder.amount < sellOrder.amount) {
+            amountExecuted = buyOrder.amount;
+            remainingToSell = sellOrder.amount - amountExecuted;
+        } else{
+            amountExecuted = sellOrder.amount;
         }
-        if (!(buyOrder.type.equals(Order.TypeOrder.BUY)) || !(sellOrder.type.equals(Order.TypeOrder.SELL))){
-            throw new IllegalArgumentException("Wrong type of order provided");
-        }
-
+        buyOrder.from.processOrder(buyOrder, amountExecuted, sellOrder.price);
+        sellOrder.from.processOrder(sellOrder, amountExecuted, sellOrder.price);
         buyOrder.to = sellOrder.from;
         sellOrder.to = buyOrder.from;
-        if(buyOrder.amount >= sellOrder.amount){
-            int amountExecuted = sellOrder.amount;
-            int remaining = buyOrder.amount - amountExecuted;
-            //this.removeorder(sellOrder);
-            //this.removeorder(buyOrder);
-            //this.addOrder(buyOrdermodified);
-        } else {
-            int amountExecuted = buyOrder.amount;
-            int remaining = sellOrder.amount - amountExecuted;
-        }
+        this.ordersToRemove.add(buyOrder);
+        this.ordersToRemove.add(sellOrder);
 
-        return;
+        if(remainingToBuy != -1){
+            this.placeOrder("buy", buyOrder.from, buyOrder.item, remainingToBuy, buyOrder.price);
+        } else if (remainingToSell != -1){
+            this.placeOrder("sell", sellOrder.from, sellOrder.item, remainingToSell, sellOrder.price);
+        }
+        System.out.println("[TRANSACTION] " + buyOrder.item + " " + amountExecuted + " " + sellOrder.price.stripTrailingZeros().toPlainString() + "€");
+    }
+
+    private void deleteOrders(){
+        this.orderList.removeAll(this.ordersToRemove);
     }
 }
