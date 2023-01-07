@@ -1,9 +1,6 @@
 package eu.pastanetwork.pastaconomy.companies;
 
-import eu.pastanetwork.pastaconomy.IMoney;
-import eu.pastanetwork.pastaconomy.Inventory;
-import eu.pastanetwork.pastaconomy.Market;
-import eu.pastanetwork.pastaconomy.citizen;
+import eu.pastanetwork.pastaconomy.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -12,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public abstract class company implements IMoney {
+public abstract class company implements IMoney, IOrderPlacer {
     protected String companyName;
     protected ArrayList<citizen> employees;
     protected Inventory companyInventory;
@@ -158,13 +155,47 @@ public abstract class company implements IMoney {
         return true;
     }
 
+    @Override
     public void addMarket(Market theMarket){
         this.market = theMarket;
     }
 
+    @Override
     public boolean hasMarket(){
         if (this.market == null){
             return false;
+        }
+        return true;
+    }
+    private boolean checkOrder(Market.Order theOrder, int quantity){
+        if (!(theOrder.from.equals(this))) {
+            return false;
+        }
+        if ((theOrder.type.equals(Market.Order.TypeOrder.SELL))){
+            if (!(this.companyInventory.CheckItemExist(theOrder.item)) || (this.companyInventory.GetItemQuantity(theOrder.item) < theOrder.amount)){
+                return false;
+            }
+        } else {
+            BigDecimal priceToPay = theOrder.price.multiply(new BigDecimal(quantity));
+            if((priceToPay.compareTo(this.money) >= 0) || (this.companyInventory.GetMaxPossibleSpace(theOrder.item) < quantity)){
+                return false;
+            }
+        }
+        return true;
+    }
+    @Override
+    public boolean processOrder(Market.Order theOrder, int quantity){
+        if (checkOrder(theOrder, quantity)){
+            return false;
+        }
+        if(theOrder.type.equals(Market.Order.TypeOrder.SELL)){
+            this.companyInventory.RemoveItemFromInventory(theOrder.item, quantity);
+            BigDecimal priceToGet = theOrder.price.multiply(BigDecimal.valueOf(quantity));
+            this.ReceiveMoney(priceToGet);
+        } else {
+            BigDecimal priceToPay = theOrder.price.multiply(BigDecimal.valueOf(quantity));
+            this.SpendMoney(priceToPay);
+            this.companyInventory.AddItemToInventory(theOrder.item, quantity);
         }
         return true;
     }
