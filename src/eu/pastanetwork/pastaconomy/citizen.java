@@ -3,17 +3,18 @@ package eu.pastanetwork.pastaconomy;
 import eu.pastanetwork.pastaconomy.companies.*;
 import java.lang.reflect.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class citizen implements IOrderPlacer{
+public class citizen implements IOrderPlacer, IMoney{
     private String name;
     private String lastName;
     private Inventory backpack;
     private int food;
     private int health;
-    private int money;
+    private BigDecimal money;
     private boolean hasJob;
     private boolean foodRequestSended;
     private ArrayList<Market> markets;
@@ -34,26 +35,29 @@ public class citizen implements IOrderPlacer{
     public citizen(String providedName, String providedLastName, int providedMoney){
         this.name = providedName;
         this.lastName = providedLastName;
-        this.money = providedMoney;
+        this.money = new BigDecimal(providedMoney).setScale(2, RoundingMode.HALF_EVEN);
         this.food = 20;
         this.health = 20;
         this.hasJob = false;
         this.backpack = new Inventory(9);
         this.markets = new ArrayList<>();
     }
-    public void ReceiveMoney(int moneyReceived){
-        if (moneyReceived > 0){
-            this.money += moneyReceived;
+    @Override
+    public void ReceiveMoney(BigDecimal moneyReceived){
+        if (moneyReceived.compareTo(new BigDecimal(0)) > 0){
+            this.money.add(moneyReceived);
         }
     }
-    public boolean SpendMoney(int moneyToSpend){
-        if (moneyToSpend > this.money){
+    @Override
+    public boolean SpendMoney(BigDecimal moneyToSpend){
+        if (moneyToSpend.compareTo(this.money) > 0){
             return false;
         }
-        this.money -= moneyToSpend;
+        this.money.subtract(moneyToSpend);
         return true;
     }
-    public int GetMoney(){
+    @Override
+    public BigDecimal GetMoney(){
         return this.money;
     }
 

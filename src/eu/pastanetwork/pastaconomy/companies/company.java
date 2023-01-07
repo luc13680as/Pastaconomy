@@ -1,5 +1,6 @@
 package eu.pastanetwork.pastaconomy.companies;
 
+import eu.pastanetwork.pastaconomy.IMoney;
 import eu.pastanetwork.pastaconomy.Inventory;
 import eu.pastanetwork.pastaconomy.Market;
 import eu.pastanetwork.pastaconomy.citizen;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public abstract class company {
+public abstract class company implements IMoney {
     protected String companyName;
     protected ArrayList<citizen> employees;
     protected Inventory companyInventory;
@@ -48,11 +49,13 @@ public abstract class company {
     }
     public String getName() { return this.companyName; }
 
+    @Override
     public void ReceiveMoney(BigDecimal moneyReceived){
         if (moneyReceived.compareTo(new BigDecimal(0)) > 0){
             this.money.add(moneyReceived);
         }
     }
+    @Override
     public boolean SpendMoney(BigDecimal moneyToSpend){
         if (moneyToSpend.compareTo(this.money) > 0){
             return false;
@@ -60,6 +63,7 @@ public abstract class company {
         this.money.subtract(moneyToSpend);
         return true;
     }
+    @Override
     public BigDecimal GetMoney(){
         return this.money;
     }
@@ -139,7 +143,7 @@ public abstract class company {
         int totalToPay = this.getSalaryCost();
         this.SpendMoney(BigDecimal.valueOf(totalToPay));
         for (citizen theemployee: this.employees){
-            theemployee.ReceiveMoney(this.baseSalary);
+            theemployee.ReceiveMoney(new BigDecimal(this.baseSalary));
         }
     }
 
