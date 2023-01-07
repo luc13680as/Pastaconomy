@@ -3,5 +3,5 @@ package eu.pastanetwork.pastaconomy;
 public interface IOrderPlacer {
     public void addMarket(Market theMarket);
     public boolean hasMarket();
-    public void processOrder(Market.Order order);
+    public boolean processOrder(Market.Order order, int quantity);
 }
