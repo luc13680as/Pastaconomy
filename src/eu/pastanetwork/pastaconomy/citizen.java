@@ -1,11 +1,10 @@
 package eu.pastanetwork.pastaconomy;
 
 import eu.pastanetwork.pastaconomy.companies.*;
-import java.lang.reflect.*;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class citizen implements IOrderPlacer, IMoney{
@@ -16,7 +15,7 @@ public class citizen implements IOrderPlacer, IMoney{
     private int health;
     private BigDecimal money;
     private boolean hasJob;
-    private boolean foodRequestSended;
+    private boolean foodRequestSent;
     private ArrayList<Market> markets;
     private static final ArrayList<Class<? extends company>> COMPANY_TYPES; // = new ArrayList<>();
 
@@ -174,10 +173,10 @@ public class citizen implements IOrderPlacer, IMoney{
 
     public void buyNeedsOnMarket(){
         if (this.backpack.CheckItemExist("Fish")){
-            this.foodRequestSended = false;
+            this.foodRequestSent = false;
             return;
         }
-        if (this.foodRequestSended){
+        if (this.foodRequestSent){
             return;
         }
         BigDecimal minPrice = new BigDecimal(1+ThreadLocalRandom.current().nextInt(500));
@@ -195,7 +194,7 @@ public class citizen implements IOrderPlacer, IMoney{
         }*/
         if(targetMarket != null){
             targetMarket.placeOrder("buy", this,"Fish", quantityDesired, minPrice);
-            this.foodRequestSended = true;
+            this.foodRequestSent = true;
         }
     }
 }
