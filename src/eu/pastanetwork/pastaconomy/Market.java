@@ -185,12 +185,15 @@ public class Market {
     }
 
     private void loopThroughOrders(List<Order> providedBuyOrders, List<Order> providedSellOrders){
+        buyloop:
         for(Order theBuyOrder : providedBuyOrders){
             for (Order theSellOrder : providedSellOrders){
                 if ((theBuyOrder.price.compareTo(theSellOrder.price) >= 0) && (theSellOrder.to == null) && (theBuyOrder.to == null)){
                     executeOrder(theBuyOrder, theSellOrder);
+                } else if (!(theBuyOrder.to == null)){
+                    continue buyloop;
                 } else {
-                    continue;
+                    break;
                 }
             }
         }
@@ -226,7 +229,7 @@ public class Market {
         } else if (remainingToSell != -1){
             this.placeOrder("sell", sellOrder.from, sellOrder.item, remainingToSell, sellOrder.price);
         }
-        System.out.println("[TRANSACTION] " + buyOrder.item + " " + amountExecuted + " " + sellOrder.price.stripTrailingZeros().toPlainString() + "€");
+        System.out.println("[TRANSACTION] " + buyOrder.item + " " + amountExecuted + " units at " + sellOrder.price.stripTrailingZeros().toPlainString() + "€");
     }
 
     private void deleteOrders(){
