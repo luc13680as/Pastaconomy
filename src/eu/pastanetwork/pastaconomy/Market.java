@@ -179,35 +179,33 @@ public class Market {
             if((sellOrders.size() == 0) || (buyOrders.size() == 0)){
                 continue;
             }
+
             loopThroughOrders(buyOrders, sellOrders);
-            deleteOrders();
         }
+        deleteOrders();
     }
 
     private void loopThroughOrders(List<Order> providedBuyOrders, List<Order> providedSellOrders){
         buyloop:
         for(Order theBuyOrder : providedBuyOrders){
             for (Order theSellOrder : providedSellOrders){
-                if ((theBuyOrder.price.compareTo(theSellOrder.price) >= 0) && (theSellOrder.to == null) && (theBuyOrder.to == null)){
-                    executeOrder(theBuyOrder, theSellOrder);
-                } else if (!(theBuyOrder.to == null)){
+                if (!(theBuyOrder.amount > 0) || !(theBuyOrder.to == null)){
                     continue buyloop;
-                } else {
-                    break;
+                }
+                if (!(theSellOrder.amount > 0) || !(theSellOrder.to == null)){
+                    continue;
+                }
+                if ((theBuyOrder.price.compareTo(theSellOrder.price) >= 0)){
+                    executeOrder(theBuyOrder, theSellOrder);
                 }
             }
         }
     }
 
     private void executeOrder(Order buyOrder, Order sellOrder){
-        /*if (!(buyOrder.price.compareTo(sellOrder.price) >= 0)) {
-            //Debug
-            System.out.println("Not matching price detected");
-            return;
-        }*/
         int amountExecuted = 0;
-        int remainingToBuy = -1;
-        int remainingToSell = -1;
+        int remainingToBuy = 0;
+        int remainingToSell = 0;
         if(buyOrder.amount > sellOrder.amount){
             amountExecuted = sellOrder.amount;
             remainingToBuy = buyOrder.amount - amountExecuted;
@@ -219,20 +217,32 @@ public class Market {
         }
         buyOrder.from.processOrder(buyOrder, amountExecuted, sellOrder.price);
         sellOrder.from.processOrder(sellOrder, amountExecuted, sellOrder.price);
-        buyOrder.to = sellOrder.from;
-        sellOrder.to = buyOrder.from;
-        this.ordersToRemove.add(buyOrder);
-        this.ordersToRemove.add(sellOrder);
+        //buyOrder.to = sellOrder.from;
+        //sellOrder.to = buyOrder.from;
+        //this.ordersToRemove.add(buyOrder);
+        //this.ordersToRemove.add(sellOrder);
 
-        if(remainingToBuy != -1){
-            this.placeOrder("buy", buyOrder.from, buyOrder.item, remainingToBuy, buyOrder.price);
+        /*if(remainingToBuy != -1){
+            //this.placeOrder("buy", buyOrder.from, buyOrder.item, remainingToBuy, buyOrder.price);
         } else if (remainingToSell != -1){
-            this.placeOrder("sell", sellOrder.from, sellOrder.item, remainingToSell, sellOrder.price);
+            //this.placeOrder("sell", sellOrder.from, sellOrder.item, remainingToSell, sellOrder.price);
+        } */
+        if (remainingToBuy == 0){
+            buyOrder.to = sellOrder.from;
+            this.ordersToRemove.add(buyOrder);
         }
+        buyOrder.amount = remainingToBuy;
+        if (remainingToSell == 0){
+            sellOrder.to = buyOrder.from;
+            this.ordersToRemove.add(sellOrder);
+        }
+        sellOrder.amount = remainingToSell;
+
         System.out.println("[TRANSACTION] " + buyOrder.item + " " + amountExecuted + " units at " + sellOrder.price.stripTrailingZeros().toPlainString() + "€");
     }
 
     private void deleteOrders(){
         this.orderList.removeAll(this.ordersToRemove);
+        this.ordersToRemove.clear();
     }
 }
