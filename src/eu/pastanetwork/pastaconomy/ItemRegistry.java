@@ -1,7 +1,6 @@
 package eu.pastanetwork.pastaconomy;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 public class ItemRegistry {
@@ -29,18 +28,15 @@ public class ItemRegistry {
     }
 
     public boolean AddItem(String itemName, String description, String category){
-        boolean state = AddItem(itemName, description, category, 64);
-        return state;
+        return AddItem(itemName, description, category, 64);
     }
 
     public boolean AddItem(String itemName, int maxSlotQuantity){
-        boolean state = AddItem(itemName, "No description available", "default", maxSlotQuantity);
-        return state;
+        return AddItem(itemName, "No description available", "default", maxSlotQuantity);
     }
 
     public boolean AddItem(String itemName){
-        boolean state = AddItem(itemName, "No description available", "default",64);
-        return state;
+        return AddItem(itemName, "No description available", "default",64);
     }
 
     private void InitRegistry(){
