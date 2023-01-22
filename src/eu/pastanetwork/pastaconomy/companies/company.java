@@ -5,8 +5,6 @@ import eu.pastanetwork.pastaconomy.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class company implements IMoney, IOrderPlacer {
@@ -14,7 +12,6 @@ public abstract class company implements IMoney, IOrderPlacer {
     protected ArrayList<citizen> employees;
     protected Inventory companyInventory;
     protected int maxEmployees;
-    protected float recruitingChances;
     protected BigDecimal money;
     protected Market market;
 
@@ -34,7 +31,7 @@ public abstract class company implements IMoney, IOrderPlacer {
     }
 
     public company(citizen creator, String nameofcompany, int money){
-        this.employees = new ArrayList<citizen>();
+        this.employees = new ArrayList<>();
         this.companyName = nameofcompany;
         this.companyInventory = new Inventory();
         this.employees.add(creator);
@@ -49,7 +46,7 @@ public abstract class company implements IMoney, IOrderPlacer {
     @Override
     public void ReceiveMoney(BigDecimal moneyReceived){
         if (moneyReceived.compareTo(new BigDecimal(0)) > 0){
-            this.money.add(moneyReceived);
+            this.money = this.money.add(moneyReceived);
         }
     }
     @Override
@@ -57,7 +54,7 @@ public abstract class company implements IMoney, IOrderPlacer {
         if (moneyToSpend.compareTo(this.money) > 0){
             return false;
         }
-        this.money.subtract(moneyToSpend);
+        this.money = this.money.subtract(moneyToSpend);
         return true;
     }
     @Override
@@ -73,10 +70,6 @@ public abstract class company implements IMoney, IOrderPlacer {
     }
 
     public boolean recruitEmployees(citizen recruit){
-        //Random r = new Random();
-        int low = 1;
-        int high = 101;
-        //int result = r.nextInt(high-low) + low;
         int result = ThreadLocalRandom.current().nextInt(101);
 
         if (!(this.isRecruiting()) || (result < 30)) {
@@ -162,10 +155,7 @@ public abstract class company implements IMoney, IOrderPlacer {
 
     @Override
     public boolean hasMarket(){
-        if (this.market == null){
-            return false;
-        }
-        return true;
+        return this.market != null;
     }
     @Override
     public boolean checkOrder(Market.Order theOrder, int quantity){
@@ -217,7 +207,7 @@ public abstract class company implements IMoney, IOrderPlacer {
     public void buyToolRequirement(){
         if(!(this.isRequirementCompleted()) && (!this.productionToolRequestSended)){
             int numberOrder = this.market.searchOrder("buy", this, this.productionToolRequirement).size();
-            if (numberOrder <= 0) {
+            if (numberOrder == 0) {
                 this.market.placeOrder("buy", this, this.productionToolRequirement, 1, BigDecimal.valueOf(1));
                 this.productionToolRequestSended = true;
             }
