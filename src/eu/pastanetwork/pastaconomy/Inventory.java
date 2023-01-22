@@ -1,8 +1,6 @@
 package eu.pastanetwork.pastaconomy;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Inventory {
     private static class Slot{
@@ -16,7 +14,7 @@ public class Inventory {
     }
     int maximumSizeInventory;
     private ArrayList<Slot> inventorySlots;
-    private ItemRegistry registry;
+    private final ItemRegistry registry;
 
     public Inventory(int sizeProvided){
         this.registry = ItemRegistry.getInstance();
@@ -37,8 +35,7 @@ public class Inventory {
     }
 
     private Item ConvertStringToItem(String itemName){
-        Item itemRequested = registry.GetItem(itemName);
-        return itemRequested;
+        return registry.GetItem(itemName);
     }
 
     public int GetMaxPossibleSpace(String itemStringName){
@@ -58,10 +55,6 @@ public class Inventory {
         int quantityRemaining = quantityRequested;
         Item requestItem = this.ConvertStringToItem(itemName);
         int maximumItemSlotSize = requestItem.getMaxSlotQuantity();
-
-        if(this.GetMaxPossibleSpace(itemName) < quantityRemaining){
-            //System.out.println("!! WARNING !! - The quantity requested (" + quantityRequested + ") go beyond the maximum remaining space (" + this.GetMaxPossibleSpace(itemName) + ") !");
-        }
 
         for (Slot slot : this.inventorySlots){
             if(slot.item.equals(requestItem)){
