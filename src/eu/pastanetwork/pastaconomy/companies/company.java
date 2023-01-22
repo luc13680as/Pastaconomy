@@ -186,7 +186,11 @@ public abstract class company implements IMoney, IOrderPlacer {
         } else {
             BigDecimal priceToPay = price.multiply(BigDecimal.valueOf(quantity));
             this.SpendMoney(priceToPay);
-            this.companyInventory.AddItemToInventory(theOrder.item, quantity);
+            try {
+                this.companyInventory.AddItemToInventory(theOrder.item, quantity);
+            } catch (IllegalArgumentException e) {
+                return false;
+            }
         }
         return true;
     }
@@ -208,7 +212,7 @@ public abstract class company implements IMoney, IOrderPlacer {
         if(!(this.isRequirementCompleted()) && (!this.productionToolRequestSended)){
             int numberOrder = this.market.searchOrder("buy", this, this.productionToolRequirement).size();
             if (numberOrder == 0) {
-                this.market.placeOrder("buy", this, this.productionToolRequirement, 1, BigDecimal.valueOf(1));
+                this.market.placeOrder("buy", this, this.productionToolRequirement, 1, BigDecimal.valueOf(ThreadLocalRandom.current().nextInt(150)+1));
                 this.productionToolRequestSended = true;
             }
         }
