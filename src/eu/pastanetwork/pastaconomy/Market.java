@@ -1,7 +1,5 @@
 package eu.pastanetwork.pastaconomy;
 
-import eu.pastanetwork.pastaconomy.companies.AgricultureCompany;
-import eu.pastanetwork.pastaconomy.companies.MiningCompany;
 import eu.pastanetwork.pastaconomy.companies.company;
 
 import java.math.BigDecimal;
@@ -9,7 +7,6 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Market {
     ArrayList<Order> orderList;
