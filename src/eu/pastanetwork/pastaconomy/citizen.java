@@ -25,6 +25,8 @@ public class citizen implements IOrderPlacer, IMoney{
         COMPANY_TYPES.add(FishingCompany.class);
         COMPANY_TYPES.add(ForestryCompany.class);
         COMPANY_TYPES.add(MiningCompany.class);
+        COMPANY_TYPES.add(BlacksmithCompany.class);
+        COMPANY_TYPES.add(MetallurgyCompany.class);
     }
 
     public citizen(){
