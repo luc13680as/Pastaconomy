@@ -48,8 +48,8 @@ public class City {
         for (company theCompany : this.cityCompanies){
             theCompany.buyToolRequirement();
             theCompany.paySalary();
-            int productionOfCompany = theCompany.produce();
-            theCompany.sellProduction(productionOfCompany);
+
+            theCompany.sellProduction(theCompany.produce());
         }
         for (citizen theCitizen : this.cityPopulation){
             theCitizen.buyNeedsOnMarket();
