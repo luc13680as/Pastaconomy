@@ -217,16 +217,7 @@ public class Market {
         }
         buyOrder.from.processOrder(buyOrder, amountExecuted, sellOrder.price);
         sellOrder.from.processOrder(sellOrder, amountExecuted, sellOrder.price);
-        //buyOrder.to = sellOrder.from;
-        //sellOrder.to = buyOrder.from;
-        //this.ordersToRemove.add(buyOrder);
-        //this.ordersToRemove.add(sellOrder);
 
-        /*if(remainingToBuy != -1){
-            //this.placeOrder("buy", buyOrder.from, buyOrder.item, remainingToBuy, buyOrder.price);
-        } else if (remainingToSell != -1){
-            //this.placeOrder("sell", sellOrder.from, sellOrder.item, remainingToSell, sellOrder.price);
-        } */
         if (remainingToBuy == 0){
             buyOrder.to = sellOrder.from;
             this.ordersToRemove.add(buyOrder);

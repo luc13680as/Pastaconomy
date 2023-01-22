@@ -183,17 +183,7 @@ public class citizen implements IOrderPlacer, IMoney{
         }
         BigDecimal minPrice = new BigDecimal(1+ThreadLocalRandom.current().nextInt(500));
         int quantityDesired = ThreadLocalRandom.current().nextInt(1, 8);
-        //Market targetMarket = null;
         Market targetMarket = this.markets.get(0);
-        /*for(Market theMarket : this.markets){
-            ArrayList<Market.Order> sellingMarket = theMarket.searchOrder("sell", "Fish");
-            for (Market.Order theOrder : sellingMarket){
-                if(minPrice.compareTo(theOrder.price) > 0){
-                    minPrice = theOrder.price;
-                    targetMarket = theMarket;
-                }
-            }
-        }*/
         if(targetMarket != null){
             targetMarket.placeOrder("buy", this,"Fish", quantityDesired, minPrice);
             this.foodRequestSent = true;
